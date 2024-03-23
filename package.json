@@ -1,0 +1,39 @@
+{
+  "name": "reasonify",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.9.0",
+    "@iconify/json": "^2.2.195",
+    "@sveltejs/adapter-auto": "^3.1.1",
+    "@sveltejs/kit": "^2.5.4",
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
+    "@types/eslint": "^8.56.6",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "@unocss/eslint-config": "^0.58.6",
+    "@unocss/extractor-svelte": "^0.58.6",
+    "@unocss/reset": "^0.58.6",
+    "eslint": "^8.57.0",
+    "eslint-plugin-format": "^0.1.0",
+    "eslint-plugin-svelte": "^2.35.1",
+    "openai": "^4.29.2",
+    "pyodide": "^0.25.0",
+    "svelte": "^4.2.12",
+    "svelte-check": "^3.6.8",
+    "svelte-sonner": "^0.3.19",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.3",
+    "unocss": "^0.58.6",
+    "vite": "^5.2.3"
+  }
+}

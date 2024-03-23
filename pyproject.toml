@@ -1,0 +1,45 @@
+[project]
+version = "0.0.1"
+name = "reasonify-headless"
+description = "headless implementation for the Reasonify Agent"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
+dependencies = [
+  "promplate~=0.3.3.4",
+  "python-box~=7.1.1",
+  "promptools[validation]~=0.1.3.2",
+]
+
+[build-system]
+requires = [ "pdm-backend" ]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+build = { package-dir = "reasonify-headless" }
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+  "black>=24.3.0",
+  "isort>=5.13.2",
+  "ruff>=0.3.3",
+  "watchfiles>=0.21.0",
+  "promplate-pyodide>=0.0.3",
+  "micropip>=0.6.0",
+]
+
+[tool.pdm.scripts]
+fmt = { composite = [
+  "ruff check --fix --exit-zero",
+  "isort .",
+  "black ."
+] }
+dev = { cmd = [
+  "watchfiles",
+  "pdm build --no-sdist -d static/whl",
+  "reasonify-headless"
+] }
+
+[tool.black]
+line-length = 120

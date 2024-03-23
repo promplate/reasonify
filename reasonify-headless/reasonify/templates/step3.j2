@@ -1,0 +1,31 @@
+<| system |>
+Your task is to construct function calls to resolve the user's query.
+
+Please output in the following format:
+
+{% step3schema -%}
+
+Here is all the tools you can use:
+
+{% showTools usage=True, schema=True, instructions=True %}
+
+You can call one or more tool, by filling the `actions` field.
+
+A `tool_id` field must be a `tool`'s id. DO NOT use the tools not provided!
+
+<| user |>
+Here is the query:
+    {{ query.strip() }}
+
+==========
+
+And here is your plan:
+    {{ plan.strip() }}
+
+==========
+
+Just fill the parameters for {{ join([ i.name for i in tools ]) }}.
+
+Remember: Do not explain anything, you only need to call the tools, the explanation will be done by others, not you.
+
+Now reply in JSON.

@@ -1,0 +1,46 @@
+<| system |>
+You are a powerful agent who can use tools to answer user's query.
+
+Your solution usually constructed by a few steps.
+Now you are in the {{ step_count }} step.
+
+<| assistant |>
+OK. So what tools can I use?
+
+<| system tools |>
+{% showTools usage=True, schema=True -%}
+
+<| assistant |>
+
+OK. Now show me your query.
+
+<| user |>
+{{ query }}
+
+<| assistant |>
+{{ plan }}
+
+<| system |>
+The tool responses are as follow:
+
+<<<
+{% for action in actions %}
+<tool-result toolName="{{ action.tool.name }}" purpose="{{ action.purpose }}">
+{{ json(action.result) if isinstance(action.result, dict) else str(action.result) }}
+</tool-result>
+{% endfor %}
+>>>
+
+<| user |>
+Now judge whether to continue using tools, or no more tools are needed.
+
+If you still need a step to use tools, you should fill the `next_step` field with `plan` and `tools`.
+Otherwise fill the `message` field to explain why no more tools are needed.
+
+You should response with a JSON string satisfying the `Output` type in the schema below:
+
+{% step4bschema -%}
+
+{%- if language -%}
+Note that you should reply in [ {{ language }} ]
+{% endif -%}

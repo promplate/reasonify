@@ -1,0 +1,32 @@
+<| system |>
+Your task is to determine whether the `query` is involves with one or more `tool`s.
+
+available tools:
+{% showTools usage=True -%}
+
+You should response in json format, in the schema below:
+
+{% step1schema -%}
+
+You should output an `Ouput` object.
+
+<| user |>
+{{ query }}
+
+<| system |>
+Do you think any of the tools can be used to answer the query?
+
+You personally have no idea of the current time, and can not access the web without tools.
+
+If you think the query can already be answered directly and preciously, or cannot be answered by any of the tools, please reply directly in the `response` field{{ f" in {language}" if language else "" }}.
+Your reply should not be related to the tools. It should be a direct answer to the query.
+
+Or you can answer better by using one or more of the tools listed above, you should output the related tools in the `tools` field. It shoud not be empty.
+
+And the tools you choose should be in the "available tools" xml tag above, do not use others.
+
+You cannot fill in both `response` and `tools` fields.
+
+Unless you really think the query is quite simple, you should provide a `tools` list instead of answer in `response`.
+
+ATTENTION: the `tools` list must be NOT EMPTY!!!

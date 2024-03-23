@@ -1,0 +1,15 @@
+{% for tool in tools or all_tools -%}
+
+<tool id="{{ tool.id }}" name="{{ tool.name }}">
+{% if usage -%}
+    <tool.usage>{{ tool.usage }}</tool.usage>
+{% endif -%}
+{% if schema -%}
+    <tool.schema>{{ tool.schema }}</tool.schema>
+{% endif -%}
+{% if instructions and tool.instructions -%}
+    <tool.instructions>{{ tool.instructions }}</tool.instructions>
+{% endif -%}
+</tool>
+
+{% endfor -%}
