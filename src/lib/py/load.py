@@ -16,7 +16,19 @@ async def patch_promplate():
 async def get_reasonify_chain(patch_promplate=patch_promplate):
     await gather(patch_promplate(), install(getenv("PACKAGE", "reasonify-headless")))
 
+    from promplate.prompt.utils import get_builtins
+
     from reasonify import chain
+
+    if not TYPE_CHECKING:
+        from js import prompt
+
+        def input(any):
+            if (result := prompt(str(any))) is None:
+                raise EOFError("User refused to input anything.")
+            return result
+
+    get_builtins()["input"] = input
 
     return chain
 

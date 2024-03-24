@@ -2,6 +2,7 @@ from typing import Any, NotRequired, TypedDict, cast
 
 from box import BoxList
 from promplate import Node
+from promplate.chain.utils import resolve
 
 from ..models.tool import Tool
 from ..utils.context import Context, new_checkpoint
@@ -42,12 +43,12 @@ def parse(context):
 
 
 @step3.end_process
-def run_tools(context):
+async def run_tools(context):
     c = cast(Step3Schema, Context(context))
     for action in c["actions"]:
         for tool in cast(list[Tool], c["tools"]):
             if tool["id"] == action["tool_id"]:
                 action["tool"] = tool
-                action["result"] = tool["run"](**action["payload"])
+                action["result"] = await resolve(tool["run"](**action["payload"]))
 
     c["actions"] = BoxList(c["actions"])

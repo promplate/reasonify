@@ -6,5 +6,5 @@ class Tool(TypedDict):
     name: str
     usage: str
     schema: str
-    instruction: str
+    instruction: str | None
     run: Callable
