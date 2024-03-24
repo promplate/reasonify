@@ -1,15 +1,14 @@
 from typing import TypedDict
 
-from promplate import Node, Template
+from promplate import Node
 
 from ..utils.context import Context, new_checkpoint
-from ..utils.globals import make_context
+from ..utils.globals import DotTemplate as Template
 from ..utils.resolve import root
 
 (
     step2 := Node(
         Template.read(root / "step2.j2"),
-        make_context(),
         response_format={"type": "json_object"},
         temperature=0,
     )

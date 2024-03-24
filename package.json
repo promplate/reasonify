@@ -23,6 +23,7 @@
     "@unocss/eslint-config": "^0.58.6",
     "@unocss/extractor-svelte": "^0.58.6",
     "@unocss/reset": "^0.58.6",
+    "ai": "^3.0.13",
     "eslint": "^8.57.0",
     "eslint-plugin-format": "^0.1.0",
     "eslint-plugin-svelte": "^2.35.1",

@@ -25,8 +25,9 @@ dev = [
   "isort>=5.13.2",
   "ruff>=0.3.3",
   "watchfiles>=0.21.0",
-  "promplate-pyodide>=0.0.3",
-  "micropip>=0.6.0",
+  "promplate-pyodide~=0.0.3",
+  "micropip~=0.6.0",
+  "pyodide-py~=0.25.0",
 ]
 
 [tool.pdm.scripts]

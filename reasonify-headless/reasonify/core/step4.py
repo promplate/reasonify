@@ -1,18 +1,14 @@
 from contextlib import suppress
 from typing import Literal, NotRequired, TypedDict
 
-from promplate import Jump, Node, Template
+from promplate import Jump, Node
 
 from ..utils.context import Context, new_checkpoint
-from ..utils.globals import make_context
+from ..utils.globals import DotTemplate as Template
 from ..utils.resolve import root
 
-step4a = Node(Template.read(root / "step4a.j2"), make_context())
-step4b = Node(
-    Template.read(root / "step4b.j2"),
-    make_context(),
-    response_format={"type": "json_object"},
-)
+step4a = Node(Template.read(root / "step4a.j2"))
+step4b = Node(Template.read(root / "step4b.j2"), response_format={"type": "json_object"})
 
 
 class NextStep(TypedDict):

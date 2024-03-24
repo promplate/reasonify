@@ -1,5 +1,6 @@
 import type { PyCallable } from "pyodide/ffi";
 
+import chat from "../chat";
 import { promplateReady, pyodideReady, reasonifyReady } from "../stores";
 import { dev } from "$app/environment";
 import { cacheSingleton } from "$lib/utils/cache";
@@ -32,3 +33,8 @@ export const getChain = cacheSingleton(async () => {
 interface Chain {
   astream: PyCallable;
 }
+
+export const getGenerate = cacheSingleton(async () => {
+  const py = await getPy();
+  return py.globals.get("make_generate")(chat);
+});

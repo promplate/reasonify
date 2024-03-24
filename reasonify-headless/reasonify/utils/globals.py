@@ -40,3 +40,11 @@ def make_context(context: Context | None = None):
     if context is None:
         return ChainMap(*static_layers, defaultdict(SilentBox))
     return ChainMap(dict(SilentBox(context)), *static_layers, defaultdict(SilentBox))
+
+
+class DotTemplate(Template):
+    def render(self, context):
+        return super().render(make_context(context))
+
+    async def arender(self, context):
+        return await super().arender(make_context(context))

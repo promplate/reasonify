@@ -1,29 +1,20 @@
-from typing import Any, Callable, NotRequired, TypedDict, cast
+from typing import Any, NotRequired, TypedDict, cast
 
 from box import BoxList
-from promplate import Node, Template
+from promplate import Node
 
+from ..models.tool import Tool
 from ..utils.context import Context, new_checkpoint
-from ..utils.globals import make_context
+from ..utils.globals import DotTemplate as Template
 from ..utils.resolve import root
 
 (
     step3 := Node(
         Template.read(root / "step3.j2"),
-        make_context(),
         response_format={"type": "json_object"},
         temperature=0,
     )
 ).add_pre_processes(new_checkpoint)
-
-
-class Tool(TypedDict, total=False):
-    id: str
-    name: str
-    usage: str
-    schema: str
-    instruction: str
-    run: Callable
 
 
 class Action(TypedDict):
@@ -37,6 +28,9 @@ class Action(TypedDict):
 class Step3Schema(TypedDict):
     note: str
     actions: list[Action]
+
+    # from parents
+    tools: list[Tool]
 
 
 @step3.mid_process
