@@ -21,7 +21,7 @@ const getRun = cacheSingleton(async () => {
 export default {
   id: "py",
   name: "Python Interpreter",
-  usage: "Run some python code. You can only use the standard library. Open your mind.",
+  usage: "Run some python code. You can only use the standard library. Open your mind. If something can be done through code, then don't ask the user.",
   schema: formatSchemaPrompt(schema),
   instruction,
   run: async options => await (await getRun()).callKwargs(options),

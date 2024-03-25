@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Chain } from "../py";
   import type { Context, Message } from "../types";
+  import type { PythonError } from "pyodide/ffi";
 
   import Step1 from "./snapshots/step1.svelte";
   import Step2 from "./snapshots/step2.svelte";
@@ -20,8 +21,10 @@
     running = true;
     try {
       for await (const i of chain.astream(context)) context = i;
-    }
-    finally {
+    } catch (e) {
+      const { toast } = await import("svelte-sonner");
+      toast.error((e as PythonError).message);
+    } finally {
       running = false;
     }
   }

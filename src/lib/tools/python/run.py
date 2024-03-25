@@ -1,8 +1,11 @@
+from promplate import Context
 from pyodide.console import Console
 
 
-def diff_context(context_in: dict, context_out: dict):
-    return {k: v for k, v in context_out.items() if k not in context_in or context_in[k] != v}
+def diff_context(context_in: Context, context_out: Context):
+    return {
+        k: v for k, v in context_out.items() if not k.startswith("__") and (k not in context_in or context_in[k] != v)
+    }
 
 
 async def run(source: str):
@@ -14,16 +17,18 @@ async def run(source: str):
 
     original_context = context.copy()
 
-    try:
-        return {
-            "result": await console.push(source),
-            "values": diff_context(original_context, context),
-            "stdout/stderr": "".join(output),
-        }
+    result = None
 
-    except Exception as err:
-        output.append(console.formattraceback(err))
-        return {
-            "values": diff_context(original_context, context),
-            "stdout/stderr": "".join(output),
-        }
+    for line in source.splitlines():
+        try:
+            future = console.push(line)
+            result = await future
+        except Exception:
+            output.append(future.formatted_error)
+            break
+
+    out = {"values": diff_context(original_context, context), "stdout/stderr": "".join(output)}
+    if result is not None:
+        out["result"] = result
+
+    return out
