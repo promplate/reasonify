@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { Step4 } from ".";
 
+  import Markdown from "../Markdown.svelte";
+
   export let context: Step4;
 </script>
 
 <div class="flex flex-col items-start gap-2.5">
   {#if context.summary}
-    <div>{context.summary}</div>
+    <Markdown text={context.summary} langs={["python", "json"]} />
   {/if}
 
   {#if context.message}

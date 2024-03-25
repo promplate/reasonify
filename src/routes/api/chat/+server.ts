@@ -16,7 +16,7 @@ export const POST = (async ({ request }) => {
   const data: ChatCompletionCreateParams = await request.json();
   data.model = "gpt-3.5-turbo-0125";
   console.log(data);
-  const headers = { "content-type": data?.response_format?.type === "json_object" ? "application/json" : "text/plain; charset=utf-8" };
+  const headers = { "content-type": data?.response_format?.type === "json_object" ? "application/json" : "text/markdown; charset=utf-8" };
   try {
     if (data.stream) {
       const res = await openai.chat.completions.create(data);
