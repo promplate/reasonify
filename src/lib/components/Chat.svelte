@@ -28,9 +28,9 @@
 </script>
 
 <main class="mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))] flex flex-col justify-between">
-  <div class="max-w-full flex flex-col-reverse text-sm">
+  <div class="group w-full flex flex-col-reverse text-sm">
     {#each context?.snapshots ?? [] as ctx}
-      <div class="w-full overflow-scroll border-t-1 border-neutral-6 border-dashed py-7">
+      <div class="relative overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
         {#if ctx.step === "step1"}
           <Step1 context={ctx} />
         {:else if ctx.step === "step2"}
@@ -42,6 +42,11 @@
         {:else}
           <pre>{JSON.stringify(ctx, null, 2)}</pre>
         {/if}
+        <div class="absolute right-0 top-0 flex flex-row translate-x-0.25em select-none items-center text-7xl op-5 -translate-y-2/7">
+          <span class="font-bold font-mono">&lt;/</span>
+          <span class="font-fancy">{ctx.step}</span>
+          <span class="font-bold font-mono">/&gt;</span>
+        </div>
       </div>
     {/each}
   </div>

@@ -18,7 +18,7 @@
 
 {#if display}
   <slot name="backdrop">
-    <div class="pointer-events-none fixed inset-0 transition duration-600" class:show />
+    <div class="fixed inset-0 transition duration-600" class:show />
   </slot>
   <div class="fixed inset-0 grid place-items-center transition duration-300" class:op-0={!show}>
     <slot name="inner">
@@ -31,6 +31,6 @@
 
 <style>
   div.show {
-    --uno: bg-neutral-9/50;
+    --uno: bg-neutral-9/50 pointer-events-none;
   }
 </style>
