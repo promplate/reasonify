@@ -1,12 +1,17 @@
 <script lang="ts">
+  import Chat from "../lib/components/Chat.svelte";
   import LoadingItem from "./LoadingItem.svelte";
+  import { browser } from "$app/environment";
   import Modal from "$lib/components/Modal.svelte";
-  import getPy from "$lib/py";
+  import { getChain } from "$lib/py";
   import { promplateReady, pyodideReady, reasonifyReady } from "$lib/stores";
-  import { onMount } from "svelte";
-
-  onMount(() => void getPy());
 </script>
+
+{#if browser}
+  {#await getChain() then chain}
+    <Chat {chain} />
+  {/await}
+{/if}
 
 <Modal show={!$reasonifyReady}>
   <ol class="flex flex-col gap-2.5 whitespace-nowrap">

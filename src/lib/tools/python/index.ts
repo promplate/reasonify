@@ -24,5 +24,5 @@ export default {
   usage: "Run some python code. You can only use the standard library. Open your mind.",
   schema: formatSchemaPrompt(schema),
   instruction,
-  run: await getRun(),
+  run: async options => await (await getRun()).callKwargs(options),
 } as Tool;

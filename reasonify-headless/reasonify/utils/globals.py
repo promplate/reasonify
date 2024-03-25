@@ -8,6 +8,7 @@ from promplate.prompt.template import SafeChainMapContext as ChainMap
 from promplate.prompt.utils import get_builtins
 
 from .resolve import root
+from .serialize import RobustEncoder
 
 
 class SilentBox(Box):
@@ -29,7 +30,7 @@ class BuiltinsLayer(dict):
 components = {i.stem: Template.read(i) for i in root.glob("**/*")}
 
 utilities = {
-    "json": lambda obj: dumps(obj, indent=4, ensure_ascii=False),
+    "json": lambda obj: dumps(obj, indent=4, ensure_ascii=False, cls=RobustEncoder),
     "join": lambda parts: (parts[0] if len(parts) < 2 else ", ".join(parts[:-1]) + f" and {parts[-1]}"),
 }
 

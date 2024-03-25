@@ -1,4 +1,4 @@
-import type { PyCallable } from "pyodide/ffi";
+import type { PyProxy } from "pyodide/ffi";
 
 import chat from "../chat";
 import { promplateReady, pyodideReady, reasonifyReady } from "../stores";
@@ -23,18 +23,36 @@ export const getChain = cacheSingleton(async () => {
   await py.runPythonAsync(source);
 
   const loadPromplate: () => Promise<void> = py.globals.get("patch_promplate");
-  const loadReasonify: (patcher: CallableFunction) => Promise<Chain> = py.globals.get("get_reasonify_chain");
+  const loadReasonify: (patcher: CallableFunction) => Promise<PyProxy> = py.globals.get("get_reasonify_chain");
 
   const chain = await loadReasonify(() => loadPromplate().then(() => promplateReady.set(true)));
   reasonifyReady.set(true);
-  return chain;
+
+  return {
+    async *astream(context) {
+      const dict = await getDict();
+      for await (const proxy of chain.astream(py.toPy(context), await getGenerate())) {
+        const { result } = proxy;
+        yield { ...dict(proxy).toJs({ dict_converter: Object.fromEntries }), result };
+      }
+    },
+  } as Chain;
 });
 
-interface Chain {
-  astream: PyCallable;
+export interface Chain {
+  astream: <T extends object>(context: T) => AsyncGenerator<T & { result: string }>;
 }
 
-export const getGenerate = cacheSingleton(async () => {
+interface PyProxyTo<T> extends PyProxy {
+  toJs: (...args: Parameters<PyProxy["toJs"]>) => T;
+}
+
+const getGenerate = cacheSingleton(async () => {
   const py = await getPy();
   return py.globals.get("make_generate")(chat);
+});
+
+const getDict = cacheSingleton(async () => {
+  const py = await getPy();
+  return py.globals.get("dict") as (obj: PyProxy) => PyProxyTo<object>;
 });
