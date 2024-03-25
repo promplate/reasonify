@@ -1,8 +1,8 @@
 [project]
-version = "0.0.1"
 name = "reasonify-headless"
 description = "headless implementation for the Reasonify Agent"
 license = { text = "MIT" }
+dynamic = [ "version" ]
 requires-python = ">=3.10"
 authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
 dependencies = [
@@ -17,6 +17,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 build = { package-dir = "reasonify-headless" }
+version = { source = "file", path = "reasonify-headless/version.py" }
 distribution = true
 
 [tool.pdm.dev-dependencies]

@@ -2,6 +2,7 @@ import type { PyProxy } from "pyodide/ffi";
 
 import chat from "../chat";
 import { promplateReady, pyodideReady, reasonifyReady } from "../stores";
+import version from "./version";
 import { dev } from "$app/environment";
 import { cacheSingleton } from "$lib/utils/cache";
 
@@ -9,7 +10,7 @@ const indexURL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/";
 
 export const getPy = cacheSingleton(async () => {
   const { loadPyodide } = await import("pyodide");
-  const PACKAGE = dev ? "/whl/reasonify_headless-0.0.1-py3-none-any.whl" : "reasonify-headless==0.0.1";
+  const PACKAGE = dev ? `/whl/reasonify_headless-${version}-py3-none-any.whl` : `reasonify-headless==${version}`;
   const py = await loadPyodide({ indexURL, packages: ["micropip", "typing-extensions"], env: { PACKAGE }, args: ["-O"] });
   pyodideReady.set(true);
   return py;
