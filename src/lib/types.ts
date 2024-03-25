@@ -1,3 +1,4 @@
+import type { Step1, Step2, Step3, Step4 } from "./components/snapshots";
 import type { Tool } from "./tools";
 
 export type Role = "user" | "assistant" | "system";
@@ -13,5 +14,5 @@ export interface Context {
   all_tools: Tool[];
 
   result?: string;
-  snapshots?: object[];
+  snapshots?: (Step1 | Step2 | Step3 | Step4)[];
 }

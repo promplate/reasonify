@@ -45,5 +45,5 @@ class Context(ChainContext):
                 return extract_json(self.result, fallback, allow_partial=allow_partial)
 
 
-def new_checkpoint(context: ChainContext):
-    Context(context).snapshots.insert(0, {})
+def new_checkpoint(context: ChainContext, *, name: str | None = None):
+    Context(context).snapshots.insert(0, {} if name is None else {"step": name})

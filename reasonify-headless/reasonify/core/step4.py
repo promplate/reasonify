@@ -1,7 +1,8 @@
 from contextlib import suppress
+from functools import partial
 from typing import Literal, NotRequired, TypedDict
 
-from promplate import Jump, Node
+from promplate import Chain, Jump, Node
 
 from ..utils.context import Context, new_checkpoint
 from ..utils.globals import DotTemplate as Template
@@ -24,7 +25,7 @@ class Step4Schema(TypedDict):
     summary: NotRequired[str]
 
 
-(step4 := step4a + step4b).add_pre_processes(new_checkpoint)
+(step4 := step4a + step4b).add_pre_processes(partial(new_checkpoint, name="step4"))
 
 
 @step4a.mid_process
@@ -49,4 +50,4 @@ def router(context):
     if c.get("action") == "continue":
         from . import step2, step3
 
-        raise Jump(step2 + step3 + step4)
+        raise Jump(Chain(step2, step3, step4))

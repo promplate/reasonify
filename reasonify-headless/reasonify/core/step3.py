@@ -1,6 +1,6 @@
+from functools import partial
 from typing import Any, NotRequired, TypedDict, cast
 
-from box import BoxList
 from promplate import Node
 from promplate.chain.utils import resolve
 
@@ -15,7 +15,7 @@ from ..utils.resolve import root
         response_format={"type": "json_object"},
         temperature=0,
     )
-).add_pre_processes(new_checkpoint)
+).add_pre_processes(partial(new_checkpoint, name="step3"))
 
 
 class Action(TypedDict):
@@ -50,5 +50,3 @@ async def run_tools(context):
             if tool["id"] == action["tool_id"]:
                 action["tool"] = tool
                 action["result"] = await resolve(tool["run"](**action["payload"]))
-
-    c["actions"] = BoxList(c["actions"])

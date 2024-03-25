@@ -1,3 +1,4 @@
+from functools import partial
 from typing import TypedDict
 
 from promplate import Node
@@ -12,7 +13,7 @@ from ..utils.resolve import root
         response_format={"type": "json_object"},
         temperature=0,
     )
-).add_pre_processes(new_checkpoint)
+).add_pre_processes(partial(new_checkpoint, name="step2"))
 
 
 class Step2Schema(TypedDict):
