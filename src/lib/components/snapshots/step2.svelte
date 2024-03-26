@@ -5,6 +5,12 @@
 </script>
 
 <div class="flex flex-col items-start gap-2.5">
+  {#if context.direct_response}
+    <div class="text-orange-3">
+      {context.direct_response}
+    </div>
+  {/if}
+
   {#if context.plan}
     {context.plan}
   {/if}

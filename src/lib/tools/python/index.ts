@@ -10,6 +10,8 @@ import { formatSchemaPrompt } from "$lib/utils/format";
 const instruction = `
 The "source" field must be a runnable python script.
 You can read the stdout/stderr and the values you created as the tool's output.
+The runtime environment is an IPython-like console, so you need to use double \\n after a indented block.
+You can use "input()" inside code to get user's information, but don't use too much!
 `.trim();
 
 const getRun = cacheSingleton(async () => {

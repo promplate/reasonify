@@ -1,3 +1,4 @@
+from contextlib import suppress
 from functools import partial
 from typing import TYPE_CHECKING, TypeVar
 
@@ -46,4 +47,9 @@ class Context(ChainContext):
 
 
 def new_checkpoint(context: ChainContext, *, name: str | None = None):
-    Context(context).snapshots.insert(0, {} if name is None else {"step": name})
+    c = Context(context)
+    with suppress(KeyError):
+        # log the raw result to the snapshot
+        c["result"] = c.result
+
+    c.snapshots.insert(0, {} if name is None else {"step": name})

@@ -8,7 +8,7 @@
   import remarkRehype from "remark-rehype";
   import { unified } from "unified";
 
-  export const langs: BundledLanguage[] = [];
+  export let langs: BundledLanguage[] = [];
   export let text: string;
   export let theme: BundledTheme = "material-theme-ocean";
 
@@ -20,7 +20,7 @@
 
   let html = "";
 
-  $: renderMarkdown(text).then((out) => (html = out));
+  $: renderMarkdown(text, langs).then((out) => (html = out));
 </script>
 
 <div class="max-w-full prose [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">

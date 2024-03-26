@@ -1,6 +1,7 @@
 import type { Tool } from "..";
 
 import schema from "./schema.ts?raw";
+import { getPy } from "$lib/py";
 import { formatSchemaPrompt } from "$lib/utils/format";
 
 export default {
@@ -10,6 +11,8 @@ export default {
   schema: formatSchemaPrompt(schema),
   instruction: "Your prompt must be in the same language as the user's query.",
   async run({ question }) {
-    return { answer: prompt(question as string) };
+    const py = await getPy();
+    const answer = prompt(question as string);
+    return py.toPy(answer === null ? { error: "User refused to answer." } : { answer });
   },
 } as Tool;

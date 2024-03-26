@@ -1,15 +1,10 @@
 import type { Tool } from "$lib/tools";
 
-export interface Step1 {
-  step: "step1";
-  response?: string;
-  tools: Tool[];
-}
-
 export interface Step2 {
   step: "step2";
   plan: string;
   tools: Tool[];
+  direct_response?: string;
 }
 
 export interface Step3 {

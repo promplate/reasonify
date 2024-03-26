@@ -1,7 +1,7 @@
 <| system |>
 Your task is to construct function calls to resolve the user's query.
 
-Please output in the following format:
+Please output in json with the following format:
 
 {% step3schema -%}
 
@@ -13,19 +13,33 @@ You can call one or more tool, by filling the `actions` field.
 
 A `tool_id` field must be a `tool`'s id. DO NOT use the tools not provided!
 
-<| user |>
-Here is the query:
-    {{ query.strip() }}
-
-==========
-
-And here is your plan:
-    {{ plan.strip() }}
-
-==========
-
 Just fill the parameters for {{ join([ i.name for i in tools ]) }}.
-
 Remember: Do not explain anything, you only need to call the tools, the explanation will be done by others, not you.
 
-Now reply in JSON.
+<| user |>
+{{ query.strip() -}}
+
+{% for context in snapshots[:2:-1] -%}
+{% if context.step == "step2" -%}
+<| assistant thinking |>
+{{ context.plan.strip() -}}
+
+I am going to use {{ join([ i.name for i in context.tools ]) -}}.
+
+{% elif context.step == "step3" -%}
+<| assistant |>
+{{ context.result -}}
+
+<| system |>
+{% for action in context.actions -%}
+<action tool="{{ action.tool.id }}">
+{{ json(action.result) }}
+</action>
+{% endfor -%}
+{% endif -%}
+{% endfor -%}
+
+<| assistant thinking |>
+{{ plan.strip() -}}
+
+{## I am going to use {{ join([ i.name for i in tools ]) -}}. #}

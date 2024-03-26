@@ -2,7 +2,7 @@ from contextlib import suppress
 from functools import partial
 from typing import Literal, NotRequired, TypedDict
 
-from promplate import Chain, Jump, Node
+from promplate import Jump, Node
 
 from ..utils.context import Context, new_checkpoint
 from ..utils.globals import DotTemplate as Template
@@ -48,6 +48,6 @@ def router(context):
     c = Context(context)
 
     if c.get("action") == "continue":
-        from . import step2, step3
+        from . import chain
 
-        raise Jump(Chain(step2, step3, step4))
+        raise Jump(chain)

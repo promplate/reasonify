@@ -3,7 +3,6 @@
   import type { Context, Message } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
-  import Step1 from "./snapshots/step1.svelte";
   import Step2 from "./snapshots/step2.svelte";
   import Step3 from "./snapshots/step3.svelte";
   import Step4 from "./snapshots/step4.svelte";
@@ -34,9 +33,7 @@
   <div class="group w-full flex flex-col-reverse text-sm">
     {#each context?.snapshots ?? [] as ctx}
       <div class="relative overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
-        {#if ctx.step === "step1"}
-          <Step1 context={ctx} />
-        {:else if ctx.step === "step2"}
+        {#if ctx.step === "step2"}
           <Step2 context={ctx} />
         {:else if ctx.step === "step3"}
           <Step3 context={ctx} />
