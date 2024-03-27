@@ -1,6 +1,9 @@
 export interface Input {
+  requirements?: string[]; // list of packages to pip install before running the code
   source: string;
 }
+
+// If you need to use some third-party libraries, you must fill the `requirements` field.
 
 export interface Output {
   "stdout/stderr": string; // if you print something, it will be here

@@ -12,7 +12,13 @@ def diff_context(context_in: Context, context_out: Context):
     }
 
 
-async def run(source: str):
+async def install_requirements(requirements: list[str]):
+    from micropip import install
+
+    await install(requirements, verbose=True, keep_going=True)
+
+
+async def run(source: str, requirements: list[str] | None = None):
     context = {"__name__": "__main__"}
 
     original_context = context.copy()
@@ -23,6 +29,9 @@ async def run(source: str):
 
     with redirect_stdout(io), redirect_stderr(io):
         try:
+            if requirements:
+                await install_requirements(requirements)
+
             result = await eval_code_async(source, context)
         except Exception as e:
             io.write("\n".join(format_exception_only(e)))
