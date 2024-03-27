@@ -10,7 +10,7 @@ import { formatSchemaPrompt } from "$lib/utils/format";
 const instruction = `
 The "source" field must be a runnable python script.
 You can read the stdout/stderr and the values you created as the tool's output.
-The runtime environment is an IPython-like console, so you need to use double \\n after a indented block.
+The runtime environment is an IPython-like console. Top-level await is supported.
 You can use "input()" inside code to get user's information, but don't use too much!
 `.trim();
 
@@ -23,7 +23,7 @@ const getRun = cacheSingleton(async () => {
 export default {
   id: "py",
   name: "Python Interpreter",
-  usage: "Run some python code. You can only use the standard library. Open your mind. If something can be done through code, then don't ask the user.",
+  usage: "Run some python code. Open your mind. If something can be done through code, then don't use other tools.",
   schema: formatSchemaPrompt(schema),
   instruction,
   run: async options => await (await getRun()).callKwargs(options),

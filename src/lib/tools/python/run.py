@@ -1,5 +1,9 @@
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
+from traceback import format_exception_only
+
 from promplate import Context
-from pyodide.console import Console
+from pyodide.code import eval_code_async
 
 
 def diff_context(context_in: Context, context_out: Context):
@@ -11,24 +15,20 @@ def diff_context(context_in: Context, context_out: Context):
 async def run(source: str):
     context = {"__name__": "__main__"}
 
-    output = []
-
-    console = Console(context, stdout_callback=output.append, stderr_callback=output.append)
-
     original_context = context.copy()
 
     result = None
 
-    for line in source.splitlines():
-        try:
-            future = console.push(line)
-            result = await future
-        except Exception:
-            output.append(future.formatted_error)
-            break
+    io = StringIO()
 
-    out = {"values": diff_context(original_context, context), "stdout/stderr": "".join(output)}
+    with redirect_stdout(io), redirect_stderr(io):
+        try:
+            result = await eval_code_async(source, context)
+        except Exception as e:
+            io.write("\n".join(format_exception_only(e)))
+
+    out = {"global values": diff_context(original_context, context), "stdout/stderr": io.getvalue()}
     if result is not None:
-        out["result"] = result
+        out["return"] = result
 
     return out
