@@ -16,7 +16,7 @@
   async function start() {
     const { default: all_tools } = await import("$lib/tools");
     const messages: Message[] = [{ role: "user", content }];
-    context = { messages, all_tools };
+    context = { messages, all_tools, language: navigator.language };
     running = true;
     try {
       for await (const i of chain.astream(context)) context = i;

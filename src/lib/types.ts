@@ -10,6 +10,7 @@ export interface Message {
 }
 
 export interface Context {
+  language?: string;
   messages: Message[];
   all_tools: Tool[];
 

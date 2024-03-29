@@ -9,12 +9,12 @@ Here is all the tools you can use:
 
 {% showTools usage=True, schema=True, instructions=True %}
 
-You can call one or more tool, by filling the `actions` field.
-
-A `tool_id` field must be a `tool`'s id. DO NOT use the tools not provided!
+You should use {{ "these tools" if len(tools) > 0 else tools[0].name }}, by filling the `actions` field.
 
 Just fill the parameters for {{ join([ i.name for i in tools ]) }}.
 Remember: Do not explain anything, you only need to call the tools, the explanation will be done by others, not you.
+
+Your `note` and `purpose` fields should use the language the user used in the query.
 
 <| user |>
 {{ query.strip() -}}
@@ -42,4 +42,4 @@ I am going to use {{ join([ i.name for i in context.tools ]) -}}.
 <| assistant thinking |>
 {{ plan.strip() -}}
 
-{## I am going to use {{ join([ i.name for i in tools ]) -}}. #}
+I am going to use {{ join([ i.name for i in tools ]) -}}.
