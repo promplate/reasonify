@@ -1,9 +1,15 @@
 from contextlib import redirect_stderr, redirect_stdout
+from functools import cache
 from io import StringIO
 from traceback import format_exception_only
 
 from promplate import Context
 from pyodide.code import eval_code_async
+
+
+@cache
+def get_context():
+    return {"__name__": "__main__"}
 
 
 def diff_context(context_in: Context, context_out: Context):
@@ -19,7 +25,7 @@ async def install_requirements(requirements: list[str]):
 
 
 async def run(source: str, requirements: list[str] | None = None):
-    context = {"__name__": "__main__"}
+    context = get_context()
 
     original_context = context.copy()
 
