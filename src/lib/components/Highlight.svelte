@@ -2,7 +2,7 @@
   import { cached } from "$lib/utils/cache";
   import { type BundledLanguage, type BundledTheme, getHighlighter } from "shiki";
 
-  export let lang: BundledLanguage;
+  export let lang: BundledLanguage | "ansi" | "text";
   export let source: string;
   export let theme: BundledTheme = "material-theme-ocean";
 

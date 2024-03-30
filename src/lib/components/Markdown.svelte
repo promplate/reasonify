@@ -10,7 +10,7 @@
 
   export let langs: BundledLanguage[] = [];
   export let text: string;
-  export let theme: BundledTheme = "material-theme-ocean";
+  export let theme: BundledTheme = "vitesse-dark";
 
   export async function renderMarkdown(text: string, langs: BundledLanguage[] = []) {
     const processor = cached(langs.join() + theme)(() => unified().use(remarkParse).use(remarkRehype).use(rehypeShiki, { theme, langs }).use(rehypeStringify))();

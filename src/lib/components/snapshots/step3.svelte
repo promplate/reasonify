@@ -2,6 +2,7 @@
   import type { Step3 } from ".";
 
   import Highlight from "../Highlight.svelte";
+  import Python from "./Python.svelte";
 
   export let context: Step3;
 </script>
@@ -26,7 +27,11 @@
           {#if action.payload}
             <div class="w-full rounded bg-gradient-(from-white/7 via-white/2 to-white/4 to-rb) p-3">
               <div class="w-full overflow-scroll rounded bg-neutral-9 px-3.5 py-3">
-                <Highlight lang="json" source={JSON.stringify({ input: action.payload, output: action.result }, null, 2)} />
+                {#if action.tool_id === "py"}
+                  <Python {action} />
+                {:else}
+                  <Highlight lang="json" source={JSON.stringify({ input: action.payload, output: action.result }, null, 2)} />
+                {/if}
               </div>
             </div>
           {/if}
