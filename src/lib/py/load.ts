@@ -6,7 +6,7 @@ import version from "./version";
 import { dev } from "$app/environment";
 import { cacheSingleton } from "$lib/utils/cache";
 
-const indexURL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/";
+const indexURL = "https://py3.online/pyodide/";
 
 export const getPy = cacheSingleton(async () => {
   const { loadPyodide } = await import("pyodide");
