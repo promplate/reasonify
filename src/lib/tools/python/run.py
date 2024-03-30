@@ -1,10 +1,13 @@
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout, suppress
 from functools import cache
 from io import StringIO
+from json import dumps, loads
 from traceback import format_exception_only
 
 from promplate import Context
 from pyodide.code import eval_code_async
+
+from reasonify.utils.serialize import RobustEncoder
 
 
 @cache
@@ -12,9 +15,18 @@ def get_context():
     return {"__name__": "__main__"}
 
 
+def is_different(a, b):
+    with suppress(ValueError):
+        return bool(a != b)
+
+    return a is not b
+
+
 def diff_context(context_in: Context, context_out: Context):
     return {
-        k: v for k, v in context_out.items() if not k.startswith("__") and (k not in context_in or context_in[k] != v)
+        k: v
+        for k, v in context_out.items()
+        if not k.startswith("__") and (k not in context_in or is_different(context_in[k], v))
     }
 
 
@@ -46,4 +58,4 @@ async def run(source: str, requirements: list[str] | None = None):
     if result is not None:
         out["return"] = result
 
-    return out
+    return loads(dumps(out, cls=RobustEncoder))  # ensure serializable
