@@ -12,4 +12,4 @@ export interface Tool {
 
 export default [python, ask] as Tool[];
 
-export { ask, python }
+export { ask, python };

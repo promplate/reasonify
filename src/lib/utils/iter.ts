@@ -14,8 +14,7 @@ export async function* responseToAsyncIterator(res: Response): AsyncGenerator<st
 
       yield decoder.decode(value, { stream: true });
     }
-  }
-  finally {
+  } finally {
     reader.releaseLock();
   }
 }

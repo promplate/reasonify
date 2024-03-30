@@ -16,6 +16,10 @@ export default antfu({
     "import/order": "off",
     "node/prefer-global/process": "off",
     "svelte/no-at-html-tags": "off",
+    "style/arrow-parens": "off",
+    "style/brace-style": ["error", "1tbs"],
+    "ts/no-use-before-define": "off",
+    "no-alert": "warn",
     "no-console": "warn",
   },
 });

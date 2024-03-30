@@ -1,0 +1,15 @@
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: yarn install
+
+      - name: svelte-check
+        run: yarn check
+
+      - name: eslint
+        run: yarn lint

@@ -22,13 +22,11 @@ export const POST = (async ({ request }) => {
       const res = await openai.chat.completions.create(data);
       const stream = OpenAIStream(res);
       return new Response(stream, { headers });
-    }
-    else {
+    } else {
       const res = await openai.chat.completions.create(data);
       return text(res.choices[0].message.content ?? "", { headers });
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err);
     error((err as { status?: number }).status ?? 400, err as OpenAIError);
   }

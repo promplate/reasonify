@@ -44,8 +44,8 @@ def make_context(context: Context | None = None):
 
 
 class DotTemplate(Template):
-    def render(self, context):
+    def render(self, context=None):
         return super().render(make_context(context))
 
-    async def arender(self, context):
+    async def arender(self, context=None):
         return await super().arender(make_context(context))

@@ -8,8 +8,7 @@
   $: if (show) {
     display = true;
     clearTimeout(timeoutId);
-  }
-  else {
+  } else {
     timeoutId = setTimeout(() => {
       display = false;
     }, 700);
