@@ -2,16 +2,18 @@ import type { PyProxy } from "pyodide/ffi";
 
 import chat from "../chat";
 import { promplateReady, pyodideReady, reasonifyReady } from "../stores";
-import version from "./version";
+import VERSION from "./version";
 import { dev } from "$app/environment";
+import * as env from "$env/static/public";
 import { cacheSingleton } from "$lib/utils/cache";
+import { version } from "pyodide";
 
-const indexURL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/";
+const indexURL = env.PUBLIC_PYODIDE_INDEX_URL?.replace("{}", version) ?? `https://cdn.jsdelivr.net/pyodide/v${version}/full/`;
 
 export const getPy = cacheSingleton(async () => {
   const { loadPyodide } = await import("pyodide");
-  const PACKAGE = dev ? `/whl/reasonify_headless-${version}-py3-none-any.whl` : `reasonify-headless==${version}`;
-  const py = await loadPyodide({ indexURL, packages: ["micropip", "typing-extensions"], env: { PACKAGE }, args: ["-O"] });
+  const PACKAGE = dev ? `/whl/reasonify_headless-${VERSION}-py3-none-any.whl` : `reasonify-headless==${VERSION}`;
+  const py = await loadPyodide({ indexURL, packages: ["micropip", "typing-extensions"], env: { PACKAGE }, args: ["-OO"] });
   pyodideReady.set(true);
   return py;
 });
@@ -32,7 +34,7 @@ export const getChain = cacheSingleton(async () => {
   return {
     async *astream(context) {
       const dict = await getDict();
-      for await (const proxy of chain.astream(py.toPy(context), await getGenerate())) {
+      for await (const proxy of chain.astream(context, await getGenerate())) {
         const { result } = proxy;
         yield { ...dict(proxy).toJs({ dict_converter: Object.fromEntries }), result };
       }
