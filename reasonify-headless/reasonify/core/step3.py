@@ -31,7 +31,7 @@ class Step3Schema(TypedDict):
     actions: list[Action]
 
     # from parents
-    tools: list[Tool]
+    tools: NotRequired[list[Tool]]
 
 
 @step3.mid_process
@@ -49,7 +49,7 @@ async def run_tools(context):
         raise Jump(step3)  # fail to generate actions
 
     for action in c["actions"]:
-        for tool in cast(list[Tool], c["tools"]):
+        for tool in cast(list[Tool], c.get("tools")):
             if tool["id"] == action["tool_id"]:
                 action["tool"] = tool
                 action["result"] = await resolve(tool["run"](**action["payload"]))

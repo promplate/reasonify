@@ -5,6 +5,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import { getChain } from "$lib/py";
   import { promplateReady, pyodideReady, reasonifyReady } from "$lib/stores";
+  import { version } from "pyodide";
 </script>
 
 {#if browser}
@@ -15,7 +16,7 @@
 
 <Modal show={!$reasonifyReady}>
   <ol class="flex flex-col gap-2.5 whitespace-nowrap">
-    <li><LoadingItem loading={!$pyodideReady} text="Loading pyodide runtime" /></li>
+    <li><LoadingItem loading={!$pyodideReady} text="Loading pyodide v{version}" /></li>
     <li class:op-30={!$pyodideReady}><LoadingItem loading={!$promplateReady} text="Patching promplate" /></li>
     <li class:op-30={!$promplateReady}><LoadingItem loading={!$reasonifyReady} text="Building headless agent" /></li>
   </ol>

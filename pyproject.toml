@@ -6,7 +6,7 @@ dynamic = [ "version" ]
 requires-python = ">=3.10"
 authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
 dependencies = [
-  "promplate~=0.3.3.4",
+  "promplate~=0.3.4.4",
   "python-box~=7.1.1",
   "promptools[validation]~=0.1.3.2",
 ]
@@ -22,13 +22,14 @@ distribution = true
 
 [tool.pdm.dev-dependencies]
 dev = [
-  "black>=24.3.0",
+  "black>=24.4.2",
   "isort>=5.13.2",
-  "ruff>=0.3.3",
+  "ruff>=0.4.4",
   "watchfiles>=0.21.0",
-  "promplate-pyodide~=0.0.3",
+  "promplate-pyodide~=0.0.3.2",
   "micropip~=0.6.0",
-  "pyodide-py~=0.25.0",
+  "pyodide-py~=0.25.1",
+  "webtypy~=0.1.7",
 ]
 
 [tool.pdm.scripts]
@@ -45,3 +46,6 @@ dev = { cmd = [
 
 [tool.black]
 line-length = 120
+
+[tool.pyright]
+reportMissingModuleSource = false
