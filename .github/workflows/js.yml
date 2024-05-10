@@ -6,10 +6,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - run: yarn install
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
 
       - name: svelte-check
-        run: yarn check
+        run: bun check
 
       - name: eslint
-        run: yarn lint
+        run: bun lint
