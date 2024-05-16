@@ -17,8 +17,11 @@
 
   async function refresh() {
     refreshing = true;
-    chain = await reloadChain();
-    refreshing = false;
+    try {
+      chain = await reloadChain();
+    } finally {
+      refreshing = false;
+    }
   }
 
   async function start() {

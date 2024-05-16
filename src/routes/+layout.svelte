@@ -5,7 +5,7 @@
   import { Toaster } from "svelte-sonner";
 </script>
 
-<Toaster theme="dark" richColors />
+<Toaster theme="dark" richColors position="bottom-left" toastOptions={{ class: "ws-pre-wrap font-mono" }} />
 
 <slot />
 

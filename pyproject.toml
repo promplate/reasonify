@@ -49,3 +49,4 @@ line-length = 120
 
 [tool.pyright]
 reportMissingModuleSource = false
+pythonVersion = "3.12"

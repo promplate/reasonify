@@ -6,6 +6,12 @@
   import { initChain } from "$lib/py";
   import { promplateReady, pyodideReady, reasonifyReady } from "$lib/stores";
   import { version } from "pyodide";
+  import { onDestroy } from "svelte";
+
+  onDestroy(() => {
+    $promplateReady = false;
+    $reasonifyReady = false;
+  });
 </script>
 
 {#if browser}

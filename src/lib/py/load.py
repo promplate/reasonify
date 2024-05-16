@@ -3,15 +3,22 @@ from functools import wraps
 from importlib import reload
 from os import getenv
 from time import perf_counter
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 from zipfile import BadZipFile
 
 from micropip import uninstall
+from pyodide.ffi import create_once_callable
 
 if TYPE_CHECKING:
     from micropip import install
+
+    create_proxy = create_once_callable
+
+    def with_toast[T: Callable](message: str) -> Callable[[T], T]: ...
+
 else:
     from micropip import install as _install
+    from pyodide.ffi import create_proxy
 
     @wraps(_install)
     async def install(*args, **kwargs):
@@ -33,6 +40,8 @@ async def patch_promplate():
     patch_promplate()
 
 
+@with_toast("re-installing reasonify")
+@create_proxy
 async def reload_reasonify_chain():
     uninstall("reasonify-headless")
     await install(getenv("PACKAGE", "reasonify-headless"))
@@ -45,6 +54,8 @@ async def reload_reasonify_chain():
     return reasonify.chain
 
 
+@with_toast("installing reasonify")
+@create_proxy
 async def get_reasonify_chain(patch_promplate=patch_promplate):
     await gather(patch_promplate(), install(getenv("PACKAGE", "reasonify-headless")))
 

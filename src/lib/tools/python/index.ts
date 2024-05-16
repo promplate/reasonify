@@ -6,6 +6,7 @@ import schema from "./schema.ts?raw";
 import { getPy } from "$lib/py";
 import { cacheSingleton } from "$lib/utils/cache";
 import { formatSchemaPrompt } from "$lib/utils/format";
+import { withToast } from "$lib/utils/toast";
 
 const instruction = `
 The "source" field must be a runnable python script.
@@ -26,5 +27,5 @@ export default {
   usage: "Run some python code. Open your mind. If something can be done through code, then don't use other tools.",
   schema: formatSchemaPrompt(schema),
   instruction,
-  run: async options => await (await getRun()).callKwargs(options),
+  run: withToast("running python code")(async options => await (await getRun()).callKwargs(options)),
 } as Tool;
