@@ -1,17 +1,25 @@
 <script lang="ts">
-  import type { Chain } from "../py";
   import type { Context, Message } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
+  import { type Chain, reloadChain } from "../py";
   import Step2 from "./snapshots/step2.svelte";
   import Step3 from "./snapshots/step3.svelte";
   import Step4 from "./snapshots/step4.svelte";
+  import { dev } from "$app/environment";
 
   export let chain: Chain;
 
   let content = "";
   let running = false;
+  let refreshing = false;
   let context: Context;
+
+  async function refresh() {
+    refreshing = true;
+    chain = await reloadChain();
+    refreshing = false;
+  }
 
   async function start() {
     const { default: all_tools } = await import("$lib/tools");
@@ -54,7 +62,14 @@
 
 <div class="fixed bottom-10 left-1/2 w-[min(70rem,calc(100vw-5rem))] rounded bg-neutral-8/90 -translate-x-1/2">
   <textarea class="h-40 w-full resize-none bg-transparent p-7 outline-none placeholder-neutral-5" placeholder="type your query here" bind:value={content} />
-  <button class="absolute bottom-6 right-6 grid place-items-center rounded bg-white p-3 text-lg transition disabled:bg-white/10 not-disabled:text-neutral-8" disabled={!content || running} on:click={start}>
-    <div class="i-lucide-plane-takeoff" />
-  </button>
+  <div class="absolute bottom-6 right-6 flex flex-row gap-3 [&>button]:(grid place-items-center rounded bg-white p-3 text-lg text-neutral-9 transition) [&>button:disabled]:(bg-white/10 text-white)">
+    <button disabled={!content || running} on:click={start}>
+      <div class="i-lucide-plane-takeoff" />
+    </button>
+    {#if dev}
+      <button disabled={refreshing} on:click={refresh}>
+        <div class="i-lucide-refresh-cw" />
+      </button>
+    {/if}
+  </div>
 </div>

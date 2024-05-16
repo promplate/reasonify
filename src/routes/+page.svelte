@@ -3,13 +3,13 @@
   import LoadingItem from "./LoadingItem.svelte";
   import { browser } from "$app/environment";
   import Modal from "$lib/components/Modal.svelte";
-  import { getChain } from "$lib/py";
+  import { initChain } from "$lib/py";
   import { promplateReady, pyodideReady, reasonifyReady } from "$lib/stores";
   import { version } from "pyodide";
 </script>
 
 {#if browser}
-  {#await getChain() then chain}
+  {#await initChain() then chain}
     <Chat {chain} />
   {/await}
 {/if}

@@ -1,8 +1,28 @@
-from asyncio import gather
+from asyncio import gather, sleep
+from functools import wraps
+from importlib import reload
 from os import getenv
+from time import perf_counter
 from typing import TYPE_CHECKING
+from zipfile import BadZipFile
 
-from micropip import install
+from micropip import uninstall
+
+if TYPE_CHECKING:
+    from micropip import install
+else:
+    from micropip import install as _install
+
+    @wraps(_install)
+    async def install(*args, **kwargs):
+        t = perf_counter()
+        while True:
+            try:
+                return await _install(*args, **kwargs)
+            except BadZipFile as err:
+                if perf_counter() - t > 10:
+                    raise err from None
+                await sleep(1)
 
 
 async def patch_promplate():
@@ -11,6 +31,18 @@ async def patch_promplate():
     from promplate_pyodide import patch_promplate
 
     patch_promplate()
+
+
+async def reload_reasonify_chain():
+    uninstall("reasonify-headless")
+    await install(getenv("PACKAGE", "reasonify-headless"))
+
+    import reasonify
+
+    if not TYPE_CHECKING:
+        reasonify = reload(reasonify)
+
+    return reasonify.chain
 
 
 async def get_reasonify_chain(patch_promplate=patch_promplate):
@@ -29,18 +61,3 @@ async def get_reasonify_chain(patch_promplate=patch_promplate):
     get_builtins()["input"] = input
 
     return chain
-
-
-if TYPE_CHECKING:
-    from promplate.llm.base import AsyncGenerate
-
-
-def make_generate(js_generate) -> "AsyncGenerate":
-    from promplate.prompt.chat import ensure
-    from promplate_pyodide.utils.proxy import to_js
-
-    async def _(prompt, **kwargs):
-        async for i in js_generate(to_js((kwargs | {"messages": ensure(prompt), "stream": True}))):
-            yield i
-
-    return _

@@ -2,13 +2,19 @@ export function cacheSingleton<R, F extends () => R>(target: F) {
   const UNSET = {};
   let result: R | object = UNSET;
 
-  return (() => {
+  const f = (() => {
     if (result !== UNSET)
       return result as R;
 
     result = target();
     return result;
-  }) as F;
+  }) as F & { invalidateCache: () => void };
+
+  f.invalidateCache = () => {
+    result = UNSET;
+  };
+
+  return f;
 }
 
 const globalCache = new Map<string, unknown>();
