@@ -1,0 +1,5 @@
+- What date is it today?
+-
+  - source: |
+        import datetime
+        datetime.datetime.now().strftime('%Y-%m-%d')

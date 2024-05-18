@@ -20,8 +20,14 @@ class Context(ChainContext):
         return self["snapshots"]
 
     def __setitem__(self, key, value):
-        self.snapshots[0][key] = value
+        with suppress(IndexError):
+            self.snapshots[0][key] = value
         super().__setitem__(key, value)
+
+    def __delitem__(self, key: str):
+        with suppress(IndexError):
+            del self.snapshots[0][key]
+        super().__delitem__(key)
 
     def __getitem__(self, key: str):
         if key != "snapshots":
@@ -46,10 +52,10 @@ class Context(ChainContext):
                 return extract_json(self.result, fallback, allow_partial=allow_partial)
 
 
-def new_checkpoint(context: ChainContext, *, name: str | None = None):
+def new_checkpoint(context: ChainContext):
     c = Context(context)
     with suppress(KeyError):
         # log the raw result to the snapshot
         c["result"] = c.result
 
-    c.snapshots.insert(0, {} if name is None else {"step": name})
+    c.snapshots.insert(0, {})

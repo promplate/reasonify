@@ -1,0 +1,47 @@
+- What is generators and async generators?
+
+-
+  - source: |
+        reply("Let's consider generators first.")
+
+  - source: |
+        def f():
+            yield 1
+            yield 2
+            yield 3
+
+        for i in f():
+            print(i)
+
+        reply("Async Generators are similar:")
+
+  - source: |
+        async def f():
+            yield 1
+            yield 2
+            yield 3
+
+        async for i in f():
+            print(i)
+
+        reply("Do you want to know more about async generators?")
+
+- Yes! How can I `yield from` an async generator?
+
+-
+  - source: |
+        reply("You can't use `yield from` with async generators. Instead, you can use `async for`. Here's an example:")
+
+  - source: |
+        async def f():
+            yield 1
+            yield 2
+            yield 3
+
+        async def g():
+            async for i in f():
+                print(i)
+
+        await g()
+
+        reply("This will print 1, 2, 3.")

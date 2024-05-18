@@ -1,0 +1,12 @@
+- What's the top-level module APIs of package `promplate`?
+
+-
+  - source: |
+        reply("Let's consider generators first.")
+
+  - source: |
+        await pip_install("promplate")
+
+        import promplate
+
+        dir(promplate)

@@ -1,16 +1,16 @@
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
+    setup:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - run: bun install
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v1
+            - run: bun install
 
-      - name: svelte-check
-        run: bun check
+            - name: svelte-check
+              run: bun check
 
-      - name: eslint
-        run: bun lint
+            - name: eslint
+              run: bun lint

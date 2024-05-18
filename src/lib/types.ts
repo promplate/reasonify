@@ -1,6 +1,3 @@
-import type { Step2, Step3, Step4 } from "./components/snapshots";
-import type { Tool } from "./tools";
-
 export type Role = "user" | "assistant" | "system";
 
 export interface Message {
@@ -9,11 +6,18 @@ export interface Message {
   name?: string;
 }
 
-export interface Context {
-  language?: string;
-  messages: Message[];
-  all_tools: Tool[];
+interface Snapshot {
+  sources: string[];
+  results: {
+    "global values"?: string;
+    "return"?: string;
+    "stdout/stderr"?: string;
+  };
+  index: number;
+}
 
+export interface Context {
+  messages: Message[];
+  snapshots?: Snapshot[];
   result?: string;
-  snapshots?: (Step2 | Step3 | Step4)[];
 }

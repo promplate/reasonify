@@ -21,5 +21,6 @@ export default antfu({
     "ts/no-use-before-define": "off",
     "no-alert": "warn",
     "no-console": "warn",
+    "yaml/indent": ["error", 4, { indicatorValueIndent: 2 }],
   },
 });

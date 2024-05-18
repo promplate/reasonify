@@ -1,4 +1,4 @@
-from json import JSONEncoder
+from json import JSONEncoder, dumps
 
 
 class RobustEncoder(JSONEncoder):
@@ -7,3 +7,7 @@ class RobustEncoder(JSONEncoder):
             return super().default(o)
         except TypeError:
             return repr(o)
+
+
+def json(obj):
+    return dumps(obj, indent=4, ensure_ascii=False, cls=RobustEncoder)

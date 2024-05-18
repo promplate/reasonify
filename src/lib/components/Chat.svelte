@@ -3,10 +3,8 @@
   import type { PythonError } from "pyodide/ffi";
 
   import { type Chain, reloadChain } from "../py";
-  import Step2 from "./snapshots/step2.svelte";
-  import Step3 from "./snapshots/step3.svelte";
-  import Step4 from "./snapshots/step4.svelte";
   import { dev } from "$app/environment";
+  import { toast } from "svelte-sonner";
 
   export let chain: Chain;
 
@@ -25,14 +23,12 @@
   }
 
   async function start() {
-    const { default: all_tools } = await import("$lib/tools");
     const messages: Message[] = [{ role: "user", content }];
-    context = { messages, all_tools, language: navigator.language };
+    context = { messages };
     running = true;
     try {
       for await (const i of chain.astream(context)) context = i;
     } catch (e) {
-      const { toast } = await import("svelte-sonner");
       toast.error((e as PythonError).message);
     } finally {
       running = false;
@@ -42,20 +38,12 @@
 
 <main class="mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))] flex flex-col justify-between">
   <div class="group w-full flex flex-col-reverse text-sm">
-    {#each context?.snapshots ?? [] as ctx}
+    {#each context?.snapshots ?? [] as ctx, i}
       <div class="relative overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
-        {#if ctx.step === "step2"}
-          <Step2 context={ctx} />
-        {:else if ctx.step === "step3"}
-          <Step3 context={ctx} />
-        {:else if ctx.step === "step4"}
-          <Step4 context={ctx} />
-        {:else}
-          <pre>{JSON.stringify(ctx, null, 2)}</pre>
-        {/if}
+        <pre>{JSON.stringify(ctx, null, 2)}</pre>
         <div class="absolute right-0 top-0 flex flex-row translate-x-0.25em select-none items-center text-7xl op-5 -translate-y-2/7">
           <span class="font-bold font-mono">&lt;/</span>
-          <span class="font-fancy">{ctx.step}</span>
+          <span class="font-fancy">{i}</span>
           <span class="font-bold font-mono">/&gt;</span>
         </div>
       </div>
