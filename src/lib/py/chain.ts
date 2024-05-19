@@ -4,7 +4,7 @@ import { toJs } from "./common";
 import generate from "./generate";
 import getGlobals from "./globals";
 import { getPy } from "./load";
-import { promplateReady, reasonifyReady } from "$lib/stores";
+import { reasonifyReady } from "$lib/stores";
 
 export interface Chain {
   astream: <T extends object>(context: T) => AsyncGenerator<T & { result: string }>;
@@ -17,7 +17,7 @@ function asChain(chain: PyProxy): Chain {
     async *astream(context) {
       const py = await getPy();
       const dict = await getDict();
-      for await (const proxy of chain.astream(context, py.toPy(generate))) {
+      for await (const proxy of chain.astream(py.toPy(context), generate)) {
         const { result } = proxy;
         yield { ...toJs((dict(proxy))), result };
       }
@@ -32,16 +32,10 @@ export async function initChain() {
   ]);
   await py.runPythonAsync(source);
 
-  const loadPromplate = await getGlobals<() => Promise<void>>("patch_promplate")();
-  const loadReasonify = await getGlobals<(patcher: CallableFunction) => Promise<PyProxy>>("get_reasonify_chain")();
+  const loadReasonify = await getGlobals<() => Promise<PyProxy>>("get_reasonify_chain")();
 
-  const chain = await loadReasonify(() => loadPromplate().then(() => promplateReady.set(true)));
+  const chain = await loadReasonify();
   reasonifyReady.set(true);
 
   return asChain(chain);
-}
-
-export async function reloadChain() {
-  const py = await getPy();
-  return asChain(await py.globals.get("reload_reasonify_chain")());
 }

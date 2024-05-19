@@ -17,7 +17,7 @@ export function cacheSingleton<R, F extends () => R>(target: F) {
   return f;
 }
 
-const globalCache = new Map<string, unknown>();
+export const globalCache = new Map<string, unknown>();
 
 export function cached(key: string) {
   return function (func: CallableFunction) {

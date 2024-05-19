@@ -2,8 +2,10 @@
   import type { Context, Message } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
-  import { type Chain, reloadChain } from "../py";
+  import { type Chain, getPy, initChain } from "../py";
   import { dev } from "$app/environment";
+  import { pyodideReady, reasonifyReady } from "$lib/stores";
+  import { globalCache } from "$lib/utils/cache";
   import { toast } from "svelte-sonner";
 
   export let chain: Chain;
@@ -16,7 +18,11 @@
   async function refresh() {
     refreshing = true;
     try {
-      chain = await reloadChain();
+      getPy.invalidateCache();
+      globalCache.clear();
+      $pyodideReady = false;
+      $reasonifyReady = false;
+      chain = await initChain();
     } finally {
       refreshing = false;
     }

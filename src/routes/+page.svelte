@@ -4,14 +4,10 @@
   import { browser } from "$app/environment";
   import Modal from "$lib/components/Modal.svelte";
   import { initChain } from "$lib/py";
-  import { promplateReady, pyodideReady, reasonifyReady } from "$lib/stores";
-  import { version } from "pyodide";
-  import { onDestroy } from "svelte";
+  import reasonifyVersion from "$lib/py/version";
+  import { pyodideReady, reasonifyReady } from "$lib/stores";
+  import { version as pyodideVersion } from "pyodide";
 
-  onDestroy(() => {
-    $promplateReady = false;
-    $reasonifyReady = false;
-  });
 </script>
 
 {#if browser}
@@ -22,8 +18,7 @@
 
 <Modal show={!$reasonifyReady}>
   <ol class="flex flex-col gap-2.5 whitespace-nowrap">
-    <li><LoadingItem loading={!$pyodideReady} text="Loading pyodide v{version}" /></li>
-    <li class:op-30={!$pyodideReady}><LoadingItem loading={!$promplateReady} text="Patching promplate" /></li>
-    <li class:op-30={!$promplateReady}><LoadingItem loading={!$reasonifyReady} text="Building headless agent" /></li>
+    <li><LoadingItem loading={!$pyodideReady} text="Loading pyodide v{pyodideVersion}" /></li>
+    <li class:op-30={!$pyodideReady}><LoadingItem loading={!$reasonifyReady} text="Loading reasonify v{reasonifyVersion}" /></li>
   </ol>
 </Modal>

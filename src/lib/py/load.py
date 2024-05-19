@@ -1,74 +1,34 @@
-from asyncio import gather, sleep
-from functools import wraps
-from importlib import reload
+from asyncio import sleep
+from contextlib import suppress
 from os import getenv
-from time import perf_counter
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Awaitable, Callable
 from zipfile import BadZipFile
 
-from micropip import uninstall
+from micropip import install
 from pyodide.ffi import create_once_callable
 
 if TYPE_CHECKING:
-    from micropip import install
 
-    create_proxy = create_once_callable
+    def with_toast[**Params, Return](message: str) -> Callable[[Callable[Params, Return]], Callable[Params, Awaitable[Return]]]: ...
 
-    def with_toast[T: Callable](message: str) -> Callable[[T], T]: ...
 
-else:
-    from micropip import install as _install
-    from pyodide.ffi import create_proxy
+async def get_reasonify_chain():
+    requirement = getenv("PACKAGE", "reasonify-headless")
+    if requirement.endswith(".whl"):
+        r = requirement[requirement.index("reasonify") : requirement.index("-py3-none")].replace("-", "==").replace("_", "-")
+    else:
+        r = requirement
 
-    @wraps(_install)
-    async def install(*args, **kwargs):
-        t = perf_counter()
+    @with_toast(f"installing {r}")
+    @create_once_callable
+    async def install_reasonify():
         while True:
-            try:
-                return await _install(*args, **kwargs)
-            except BadZipFile as err:
-                if perf_counter() - t > 10:
-                    raise err from None
-                await sleep(1)
+            with suppress(BadZipFile):
+                return await install(requirement)
+            await sleep(0.1)
 
-
-async def patch_promplate():
-    await install(["promplate-pyodide~=0.0.3"])
-
-    from promplate_pyodide import patch_promplate
-
-    patch_promplate()
-
-
-@with_toast("re-installing reasonify")
-@create_proxy
-async def reload_reasonify_chain():
-    uninstall("reasonify-headless")
-    await install(getenv("PACKAGE", "reasonify-headless"))
-
-    import reasonify
-
-    if not TYPE_CHECKING:
-        reasonify = reload(reasonify)
-
-    return reasonify.chain
-
-
-@with_toast("installing reasonify")
-@create_proxy
-async def get_reasonify_chain(patch_promplate=patch_promplate):
-    await gather(patch_promplate(), install(getenv("PACKAGE", "reasonify-headless")))
-
-    from js import window
-    from promplate.prompt.utils import get_builtins
+    await install_reasonify()
 
     from reasonify import chain
-
-    def input(any):
-        if (result := window.prompt(str(any))) is None:
-            raise EOFError("User refused to input anything.")
-        return result
-
-    get_builtins()["input"] = input
 
     return chain

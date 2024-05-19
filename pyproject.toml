@@ -29,7 +29,6 @@ dev = [
   "isort>=5.13.2",
   "ruff>=0.4.4",
   "watchfiles>=0.21.0",
-  "promplate-pyodide~=0.0.3.2",
   "micropip~=0.6.0",
   "webtypy~=0.1.7",
 ]
