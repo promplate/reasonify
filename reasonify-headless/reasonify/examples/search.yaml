@@ -1,0 +1,21 @@
+- Can you google yourself for me?
+
+-
+  - source: |
+        reply("Sure, Let's me use `fetch` first.")
+        url = "https://google.com/q=reasonify"
+        res = await fetch("https://google.com/q=reasonify")
+    result:
+        url: "https://google.com/q=reasonify"
+        res: [500, Internal Server Error]
+
+-
+  - source: |
+        reply("It seems that I encountered an 500 error while trying to fetch google.")
+        reply("Do you mind read it yourself?")
+        reply(f"I am opening {url} for you.")
+
+        from webbrowser import open
+        open(url)
+    result:
+        return: true

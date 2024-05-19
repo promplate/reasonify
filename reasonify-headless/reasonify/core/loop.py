@@ -16,14 +16,18 @@ from ..utils.tool import tool
 
 
 @SimpleNode
-async def intro(context: dict):
+async def intro(context):
     context["few_shot"] = await get_examples()
-    context["response"] = []
+
+    new_checkpoint(context)
+    c = Context(context)
+
+    c.setdefault("response", [])
 
     @tool
     def reply(message: str):
         """talk to the user"""
-        context["response"] += [message]
+        c["response"] += [message]
 
     get_context()["reply"] = reply
 
@@ -33,8 +37,6 @@ main_loop = Chain(intro, Loop(main := Node(main)))
 
 @main.pre_process
 def _(context):
-    new_checkpoint(context)
-
     c = Context(context)
     c["queue"] = queue = QueueWrapper[str]()
     c["index"] = 0
@@ -55,7 +57,16 @@ def _(context):
     c = Context(context)
     c["sources"] = c.extract_json([])
 
+    if c.get("pure_text", False):
+        c["response"][-1] = c.result
+        return
+
     queue: QueueWrapper[str] = c["queue"]
+
+    sources = c.extract_json(False, list[str], ~Allow.STR)
+    if sources is False:
+        c["response"] += [c.result]
+        c["pure_text"] = True
 
     for source in c.extract_json([], list[str], ~Allow.STR)[c["index"] :]:
         queue.put(source)

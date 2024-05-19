@@ -13,7 +13,8 @@ interface Snapshot {
     "return"?: string;
     "stdout/stderr"?: string;
   };
-  index: number;
+  response?: string[];
+  index?: number;
 }
 
 export interface Context {

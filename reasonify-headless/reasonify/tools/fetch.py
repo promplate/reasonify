@@ -7,8 +7,6 @@ from pyodide.http import pyfetch
 
 from ..utils.tool import tool
 
-pattern = re_compile(r"\n{3,}")
-
 
 class FetchFailed(Exception): ...
 
