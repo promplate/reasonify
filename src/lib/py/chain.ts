@@ -5,6 +5,7 @@ import generate from "./generate";
 import getGlobals from "./globals";
 import { getPy } from "./load";
 import { reasonifyReady } from "$lib/stores";
+import { startIconAnimation, stopIconAnimation } from "$lib/stores/icon";
 
 export interface Chain {
   astream: <T extends object>(context: T) => AsyncGenerator<T & { result: string }>;
@@ -26,6 +27,8 @@ function asChain(chain: PyProxy): Chain {
 }
 
 export async function initChain() {
+  startIconAnimation();
+
   const [py, { default: source }] = await Promise.all([
     getPy(),
     import("./load.py?raw"),
@@ -36,6 +39,8 @@ export async function initChain() {
 
   const chain = await loadReasonify();
   reasonifyReady.set(true);
+
+  stopIconAnimation();
 
   return asChain(chain);
 }

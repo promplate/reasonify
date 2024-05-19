@@ -2,8 +2,13 @@
   import "@unocss/reset/tailwind-compat.css";
   import "uno.css";
 
+  import { emoji } from "$lib/stores";
   import { Toaster } from "svelte-sonner";
 </script>
+
+<svelte:head>
+  <link rel="icon" href="https://api.iconify.design/fluent-emoji:{$emoji ?? "sparkler"}.svg" />
+</svelte:head>
 
 <Toaster theme="dark" richColors position="bottom-left" toastOptions={{ class: "ws-pre-wrap font-mono" }} />
 

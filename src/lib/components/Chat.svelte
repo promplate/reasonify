@@ -4,7 +4,7 @@
 
   import { type Chain, getPy, initChain } from "../py";
   import { dev } from "$app/environment";
-  import { pyodideReady, reasonifyReady } from "$lib/stores";
+  import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { globalCache } from "$lib/utils/cache";
   import { toast } from "svelte-sonner";
 
@@ -40,6 +40,9 @@
       running = false;
     }
   }
+
+  $: running ? startIconAnimation() : stopIconAnimation();
+
 </script>
 
 <main class="mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))] flex flex-col justify-between">
