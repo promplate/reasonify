@@ -74,7 +74,7 @@ async def _(context):
         messages.append(assistant > json(c["sources"]))
         messages.append(system @ "results" > json(c["results"]))
 
+    del c["future"], c["queue"]
+
     if c["response"] or not c["sources"]:
         raise Jump(out_of=main_loop)
-
-    del c["future"], c["queue"]

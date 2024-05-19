@@ -55,7 +55,7 @@ async def run(source: str):
                 out["return"] = result
         except ValueError as e:
             print(format_exception_only(e))
-            if all(isinstance(e, t) for t in (ValueError, TypeError)):
+            if all(is_different(result, v) for v in diff.values()):
                 out["return"] = str(result)
 
     return loads(json(out))  # ensure serializable
