@@ -1,11 +1,13 @@
 from asyncio import sleep
 from contextlib import suppress
-from os import getenv
+from os import chdir, getenv
+from pathlib import Path
 from typing import TYPE_CHECKING, Awaitable, Callable
 from zipfile import BadZipFile
 
+from js import FileSystemDirectoryHandle, window
 from micropip import install
-from pyodide.ffi import create_once_callable
+from pyodide.ffi import create_once_callable, create_proxy
 
 if TYPE_CHECKING:
 
@@ -32,3 +34,36 @@ async def get_reasonify_chain():
     from reasonify import chain
 
     return chain
+
+
+if TYPE_CHECKING:
+
+    class NativeFS:
+        syncfs: Callable[[], Awaitable[None]]
+
+    def mount(target: str, handle: FileSystemDirectoryHandle) -> Awaitable[NativeFS]: ...
+
+else:
+    from pyodide_js import mountNativeFS as mount
+
+
+@create_proxy
+async def mount_native_fs():
+    handle = await window.showDirectoryPicker()
+    while await handle.requestPermission({"mode": "readwrite"}) != "granted":
+        pass
+
+    fs = await mount(path := str(root / handle.name), handle)
+
+    mounted[path] = fs
+
+    return handle.name
+
+
+root = Path("/workspace/mnt")
+
+root.mkdir(parents=True, exist_ok=True)
+
+chdir(root)
+
+mounted: dict[str, "NativeFS"] = {}

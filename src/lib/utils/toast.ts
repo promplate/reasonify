@@ -8,11 +8,11 @@ function displayError(error: any) {
   return String(error);
 }
 
-export function withToast<T extends (...args: any[]) => any>(message: string) {
+export function withToast<T extends (...args: any[]) => any>(message: string, success?: string | ((data: ReturnType<T>) => string)) {
   return (anyFunction: T) => {
     return (async (...args) => {
       const promise: Promise<ReturnType<T>> = Promise.resolve(anyFunction(...args));
-      toast.promise(promise, { loading: message, success: message, error: displayError });
+      toast.promise(promise, { loading: message, success: success ?? message, error: displayError });
       const result = await promise;
       return result;
     }) as T;

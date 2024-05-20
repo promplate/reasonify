@@ -6,6 +6,7 @@
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
+  import { mount } from "$lib/py/fs";
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { globalCache } from "$lib/utils/cache";
   import { toast } from "svelte-sonner";
@@ -79,6 +80,9 @@
   <div class="absolute bottom-6 right-6 flex flex-row gap-3 [&>button]:(grid place-items-center rounded bg-white p-3 text-lg text-neutral-9 transition) [&>button:disabled]:(bg-white/10 text-white)">
     <button disabled={!content || running} on:click={start}>
       <div class="i-lucide-plane-takeoff" />
+    </button>
+    <button disabled={!$pyodideReady} on:click={mount}>
+      <div class="i-lucide-file-symlink" />
     </button>
     {#if dev}
       <button disabled={refreshing} on:click={refresh}>
