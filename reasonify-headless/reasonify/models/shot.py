@@ -1,3 +1,5 @@
+from typing import Literal
+
 from promplate.prompt.chat import Message, assistant, system, user
 from pydantic import BaseModel, Field
 
@@ -7,10 +9,16 @@ from ..utils.serialize import json
 
 class Run(BaseModel):
     source: str
-    result: dict | None = None
+    result: dict | Literal[False] | None = None
 
-    async def ensure_result(self) -> dict:
-        return self.result if self.result is not None else await run(self.source)
+    async def ensure_result(self) -> dict | str:
+        match self.result:
+            case False:
+                return "<omitted>"
+            case None:
+                return await run(self.source)
+            case _:
+                return self.result
 
 
 class Shot(BaseModel):

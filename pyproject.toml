@@ -31,6 +31,7 @@ dev = [
   "watchfiles>=0.21.0",
   "micropip~=0.6.0",
   "webtypy~=0.1.7",
+  "python-slugify~=8.0.4",
 ]
 
 [tool.pdm.scripts]
