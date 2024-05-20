@@ -1,5 +1,7 @@
 <script>
   import "@unocss/reset/tailwind-compat.css";
+  import "@fontsource-variable/jetbrains-mono";
+  import "@fontsource-variable/fira-code";
   import "uno.css";
 
   import { emoji } from "$lib/stores";
@@ -10,7 +12,7 @@
   <link rel="icon" href="https://api.iconify.design/fluent-emoji:{$emoji ?? "sparkler"}.svg" />
 </svelte:head>
 
-<Toaster theme="dark" richColors position="bottom-left" toastOptions={{ class: "ws-pre-wrap font-mono" }} />
+<Toaster theme="dark" richColors position="bottom-left" toastOptions={{ class: "ws-pre-wrap font-fira" }} />
 
 <slot />
 

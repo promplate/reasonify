@@ -23,6 +23,6 @@
   $: renderMarkdown(text, langs).then((out) => (html = out));
 </script>
 
-<div class="max-w-full prose [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+<div class="max-w-full prose [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&>pre]:line-height-snug">
   {@html html}
 </div>

@@ -3,6 +3,8 @@
   import type { PythonError } from "pyodide/ffi";
 
   import { type Chain, getPy, initChain } from "../py";
+  import Highlight from "./Highlight.svelte";
+  import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { globalCache } from "$lib/utils/cache";
@@ -48,15 +50,24 @@
 <main class="mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))] flex flex-col justify-between">
   <div class="group w-full flex flex-col-reverse text-sm">
     {#each context?.snapshots ?? [] as ctx}
-      <div class="relative flex flex-col gap-2.5 overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
-        {#each ctx.response ?? [] as text}
-          <p>{text}</p>
-        {/each}
-        <pre>{JSON.stringify(ctx, null, 2)}</pre>
+      <div class="relative flex flex-col gap-4.5 overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
+        {#if ctx.response?.length}
+          <section class="flex flex-col gap-1">
+            {#each ctx.response ?? [] as text}
+              <Markdown {text} langs={["python"]} />
+            {/each}
+          </section>
+        {/if}
+        {#if ctx.sources?.length}
+          <Highlight source={ctx.sources.join("\n")} lang="python" />
+        {/if}
+        {#if ctx.results?.length}
+          <Highlight source={JSON.stringify(Object.assign({}, ...ctx.results), null, 4)} lang="json" />
+        {/if}
         <div class="absolute right-0 top-0 flex flex-row translate-x-0.25em select-none items-center text-7xl op-5 -translate-y-2/7">
-          <span class="font-bold font-mono">&lt;/</span>
+          <span class="font-bold font-fira">&lt;/</span>
           <span class="font-fancy">{ctx.index ?? 0}</span>
-          <span class="font-bold font-mono">/&gt;</span>
+          <span class="font-bold font-fira">/&gt;</span>
         </div>
       </div>
     {/each}

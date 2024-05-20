@@ -1,4 +1,3 @@
-from contextlib import suppress
 from functools import partial
 from typing import TYPE_CHECKING
 
@@ -18,14 +17,16 @@ class Context(ChainContext):
         return self["snapshots"]
 
     def __setitem__(self, key, value):
-        with suppress(IndexError):
+        try:
             self.snapshots[0][key] = value
-        super().__setitem__(key, value)
+        except IndexError:
+            super().__setitem__(key, value)
 
     def __delitem__(self, key: str):
-        with suppress(KeyError):
+        try:
             del self.snapshots[0][key]
-        super().__delitem__(key)
+        except KeyError:
+            super().__delitem__(key)
 
     def __getitem__(self, key: str):
         if key != "snapshots":
@@ -58,9 +59,4 @@ class Context(ChainContext):
 
 
 def new_checkpoint(context):
-    c = Context.ensure(context)
-    with suppress(KeyError):
-        # log the raw result to the snapshot
-        c["result"] = c.result
-
-    c.snapshots.insert(0, {})
+    Context.ensure(context).snapshots.insert(0, {})

@@ -7,12 +7,12 @@ export interface Message {
 }
 
 interface Snapshot {
-  sources: string[];
-  results: {
+  sources?: string[];
+  results?: {
     "global values"?: string;
     "return"?: string;
     "stdout/stderr"?: string;
-  };
+  }[];
   response?: string[];
   index?: number;
 }

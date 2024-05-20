@@ -4,7 +4,11 @@ import { defineConfig, presetIcons, presetTypography, presetUno, presetWebFonts,
 const config = defineConfig({
   extractors: [extractorSvelte()],
   transformers: [transformerVariantGroup(), transformerDirectives()],
-  presets: [presetUno(), presetWebFonts({ provider: "bunny", fonts: { mono: "Fira Code:300,400,500,600,700", fancy: "Archivo Black" } }), presetIcons(), presetTypography()],
+  presets: [presetUno(), presetWebFonts({ provider: "bunny", fonts: {
+    mono: { name: "JetBrains Mono Variable", provider: "none" },
+    fira: { name: "Fira Code Variable", provider: "none" },
+    fancy: "Archivo Black",
+  } }), presetIcons(), presetTypography()],
 });
 
 export default config;

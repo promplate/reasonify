@@ -76,7 +76,7 @@ async def _(c: Context, queue: QueueWrapper, future: Future, messages: list[Mess
     queue.end()
     await future
 
-    del c["future"], c["queue"]
+    del c["future"], c["queue"], c["pure_text"]
 
     if sources:
         messages.append(assistant > json(sources))

@@ -13,6 +13,8 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.18.0",
+    "@fontsource-variable/fira-code": "^5.0.18",
+    "@fontsource-variable/jetbrains-mono": "^5.0.21",
     "@iconify/json": "^2.2.210",
     "@shikijs/rehype": "^1.5.2",
     "@sveltejs/adapter-auto": "^3.2.0",

@@ -4,7 +4,7 @@
 
   export let lang: BundledLanguage | "ansi" | "text";
   export let source: string;
-  export let theme: BundledTheme = "material-theme-ocean";
+  export let theme: BundledTheme = "vesper";
 
   async function highlight(source: string) {
     const highlighter = await cached(lang + theme)(() => getHighlighter({ langs: [lang], themes: [theme] }))();
@@ -17,7 +17,7 @@
   $: highlight(source).then((out) => (html = out));
 </script>
 
-<div>
+<div class="text-xs line-height-relaxed [&_*]:font-mono">
   {@html html}
 </div>
 
