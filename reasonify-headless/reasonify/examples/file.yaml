@@ -3,11 +3,10 @@
 -
   - source: |
         from pathlib import Path
-        paths = list(Path("/workspace/mnt").glob("*"))
+        paths = list(Path("/workspace/mnt").glob("**/*"))
 
   - source: |
-        reply(f"I see these top level directories: {", ".join(map(str, paths))}")
-        reply("Do you need me to list all the files out using `rglob`?")
+        reply(f"I can see these top level files/dirs: {", ".join(map(str, paths))}")
 
 - I just uploaded a PNG file, can you find it?
 

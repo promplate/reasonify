@@ -3,7 +3,7 @@ from operator import call
 
 from partial_json_parser import Allow
 from promplate import Chain, Jump, Loop, Message, Node
-from promplate.prompt.chat import assistant, system
+from promplate.prompt.chat import assistant, system, user
 from promplate_recipes.functional.node import SimpleNode
 
 from ..examples import get_examples
@@ -18,7 +18,9 @@ from ..utils.tool import tool
 
 @SimpleNode
 @dispatch_context
-async def intro(c: Context):
+async def intro(c: Context, query: str, messages: list[Message]):
+    messages.append(user > query)
+
     response = c["response"] = []
 
     @tool
@@ -32,6 +34,7 @@ async def intro(c: Context):
 @intro.pre_process
 async def _(context: dict):
     context["few_shot"] = await get_examples()
+    context["messages"] = context.get("messages", [])
     new_checkpoint(context)
 
 

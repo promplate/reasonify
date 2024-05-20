@@ -36,10 +36,8 @@ class Context(ChainContext):
         return super().__getitem__(key)
 
     def __contains__(self, key):
-        if key != "snapshots":
-            for snapshot in self.snapshots:
-                if key in snapshot:
-                    return True
+        if key != "snapshots" and key in self.snapshots[0]:
+            return True
         return super().__contains__(key)
 
     if TYPE_CHECKING:

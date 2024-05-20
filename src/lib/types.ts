@@ -18,7 +18,8 @@ interface Snapshot {
 }
 
 export interface Context {
-  messages: Message[];
+  query: string;
+  messages?: Message[];
   snapshots?: Snapshot[];
   result?: string;
 }

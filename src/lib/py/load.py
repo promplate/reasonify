@@ -61,17 +61,19 @@ def install_slugify():
 
 @create_proxy
 async def mount_native_fs():
-    await install_slugify()
-
-    from slugify import slugify
 
     handle = await window.showDirectoryPicker()
     while await handle.requestPermission({"mode": "readwrite"}) != "granted":
         pass
 
+    await install_slugify()
+    from slugify import slugify
+
     name = slugify(handle.name)
 
     fs = await mount(path := str(root / name), handle)
+
+    chdir(path)
 
     mounted[path] = fs
 

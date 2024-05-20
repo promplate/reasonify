@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Context, Message } from "../types";
+  import type { Context } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
   import { type Chain, getPy, initChain } from "../py";
@@ -16,7 +16,9 @@
   let content = "";
   let running = false;
   let refreshing = false;
-  let context: Context;
+  let context: Context = { query: content };
+
+  $: messages = context?.messages ?? [];
 
   async function refresh() {
     refreshing = true;
@@ -32,8 +34,7 @@
   }
 
   async function start() {
-    const messages: Message[] = [{ role: "user", content }];
-    context = { messages };
+    context = { ...context, query: content };
     running = true;
     try {
       for await (const i of chain.astream(context)) context = i;
@@ -81,7 +82,10 @@
     <button disabled={!content || running} on:click={start}>
       <div class="i-lucide-plane-takeoff" />
     </button>
-    <button disabled={!$pyodideReady} on:click={mount}>
+    <button disabled={!$pyodideReady} on:click={async () => {
+      const name = await mount();
+      context.messages = [...messages, { role: "system", name: "info", content: `user mounted a directory: ./${name}` }];
+    }}>
       <div class="i-lucide-file-symlink" />
     </button>
     {#if dev}
@@ -89,5 +93,10 @@
         <div class="i-lucide-refresh-cw" />
       </button>
     {/if}
+    <button disabled={!messages.length || running} on:click={() => {
+      context = { query: content };
+    }}>
+      <div class="i-lucide-circle-fading-plus" />
+    </button>
   </div>
 </div>
