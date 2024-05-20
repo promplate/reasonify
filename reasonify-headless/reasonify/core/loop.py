@@ -9,7 +9,7 @@ from promplate_recipes.functional.node import SimpleNode
 from ..examples import get_examples
 from ..templates import main
 from ..utils.context import Context, new_checkpoint
-from ..utils.inject import dispatch_context
+from ..utils.inject import dispatch_context, inject
 from ..utils.queue import QueueWrapper
 from ..utils.run import get_context, run
 from ..utils.serialize import json
@@ -40,9 +40,7 @@ main_loop = Chain(intro, Loop(main := Node(main)))
 
 @main.pre_process
 @dispatch_context
-def _():
-    queue = QueueWrapper[str]()
-    results = list[dict]()
+def _(c: Context, queue=inject(lambda: QueueWrapper[str]()), results=inject(lambda: list[dict]())):
 
     @ensure_future
     @call
@@ -50,7 +48,7 @@ def _():
         async for source in queue:
             results.append(await run(source))
 
-    return {"future": job, "index": 0, "queue": queue, "results": results}
+    c.update({"future": job, "index": 0})
 
 
 @main.mid_process
@@ -65,7 +63,7 @@ def _(c: Context, index: int, queue: QueueWrapper[str], response: list[str], pur
     sources = c.extract_json(None, list[str], ~Allow.STR)
     if sources is None:
         response.append(c.result)
-        return {"pure_text": True}
+        return c.update({"pure_text": True})
 
     for source in sources[index:]:
         queue.put(source)

@@ -23,7 +23,7 @@ class Context(ChainContext):
         super().__setitem__(key, value)
 
     def __delitem__(self, key: str):
-        with suppress(IndexError):
+        with suppress(KeyError):
             del self.snapshots[0][key]
         super().__delitem__(key)
 
