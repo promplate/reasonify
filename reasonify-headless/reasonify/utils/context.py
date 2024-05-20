@@ -1,12 +1,10 @@
 from contextlib import suppress
 from functools import partial
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING
 
 from partial_json_parser import ALL
 from promplate import ChainContext
 from promptools.extractors.json import extract_json
-
-T = TypeVar("T")
 
 
 class Context(ChainContext):
@@ -36,6 +34,13 @@ class Context(ChainContext):
                     return snapshot[key]
         return super().__getitem__(key)
 
+    def __contains__(self, key):
+        if key != "snapshots":
+            for snapshot in self.snapshots:
+                if key in snapshot:
+                    return True
+        return super().__contains__(key)
+
     if TYPE_CHECKING:
 
         @property
@@ -52,8 +57,8 @@ class Context(ChainContext):
                 return extract_json(self.result, fallback, allow_partial=allow_partial)
 
 
-def new_checkpoint(context: ChainContext):
-    c = Context(context)
+def new_checkpoint(context):
+    c = Context.ensure(context)
     with suppress(KeyError):
         # log the raw result to the snapshot
         c["result"] = c.result
