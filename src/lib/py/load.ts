@@ -11,7 +11,7 @@ const indexURL = ("PUBLIC_PYODIDE_INDEX_URL" in env) ? (env.PUBLIC_PYODIDE_INDEX
 export const getPy = cacheSingleton(async () => {
   const { loadPyodide } = await import("pyodide");
   const PACKAGE = dev ? `/whl/reasonify_headless-${VERSION}-py3-none-any.whl` : `reasonify-headless==${VERSION}`;
-  const py = await loadPyodide({ indexURL, packages: ["micropip", "typing-extensions"], env: { PACKAGE }, args: dev ? [] : ["-OO"] });
+  const py = await loadPyodide({ indexURL, packages: ["micropip", "typing-extensions"], env: { PACKAGE }, args: dev ? [] : ["-O"] });
   pyodideReady.set(true);
   py.globals.set("with_toast", withToast);
   return py;
