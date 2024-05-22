@@ -9,7 +9,7 @@ export interface PyProxyTo<T> extends PyProxy {
 export function toJs<T>(proxy: PyProxyTo<T>) {
   if (isObj(proxy)) {
     if ("toJs" in proxy)
-      return proxy.toJs({ dict_converter: Object.fromEntries });
+      return proxy.toJs();
 
     for (const key in proxy as any)
       (proxy as any)[key] = toJs(proxy[key]);

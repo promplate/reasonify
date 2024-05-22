@@ -11,16 +11,13 @@ export interface Chain {
   astream: <T extends object>(context: T) => AsyncGenerator<T & { result: string }>;
 }
 
-const getDict = getGlobals<(obj: PyProxy) => PyProxy>("dict");
-
 function asChain(chain: PyProxy): Chain {
   return {
     async *astream(context) {
       const py = await getPy();
-      const dict = await getDict();
       for await (const proxy of chain.astream(py.toPy(context), generate)) {
         const { result } = proxy;
-        yield { ...toJs((dict(proxy))), result };
+        yield { ...toJs((proxy)), result };
       }
     },
   };
