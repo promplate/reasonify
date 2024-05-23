@@ -1,4 +1,4 @@
-from js import window
+from contextlib import suppress
 
 from ..utils.tool import tool
 
@@ -7,7 +7,14 @@ from ..utils.tool import tool
 def input(prompt: str):
     """return the input from the user, useful for asking questions to the user"""
 
-    if res := window.prompt(prompt):
-        return res
+    with suppress(ModuleNotFoundError):
+        from js import window
 
-    raise IOError("User cancelled the input (refused to input anything)")
+        if res := window.prompt(prompt):
+            return res
+
+        raise IOError("User cancelled the input (refused to input anything)")
+
+    from builtins import input
+
+    return input(prompt)
