@@ -6,7 +6,7 @@ dynamic = [ "version" ]
 requires-python = ">=3.12"
 authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
 dependencies = [
-  "pyodide-py~=0.26.0a5 ; sys_platform != 'emscripten'",
+  "useful-coderunner~=1.0 ; sys_platform != 'emscripten'",
   "promplate~=0.3.4.7",
   "python-box~=7.1.1",
   "promptools[validation]~=0.1.3.4",
@@ -32,6 +32,7 @@ dev = [
   "micropip~=0.6.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
+  "pyodide-py~=0.26.0a5",
 ]
 
 [tool.pdm.scripts]

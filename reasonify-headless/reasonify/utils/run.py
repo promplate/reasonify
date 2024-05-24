@@ -6,9 +6,13 @@ from traceback import format_exception, format_exception_only
 from typing import Callable
 
 from promplate import Context
-from pyodide.code import eval_code_async
 
 from .serialize import json
+
+try:
+    from pyodide.code import eval_code_async
+except ModuleNotFoundError:
+    from coderunner import eval_code_async
 
 
 @cache
