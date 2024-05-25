@@ -4,7 +4,7 @@ from ..utils.tool import tool
 
 
 @tool
-def input(prompt: str):
+def input(prompt=""):
     """return the input from the user, useful for asking questions to the user"""
 
     with suppress(ModuleNotFoundError):
