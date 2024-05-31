@@ -1,24 +1,30 @@
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-    setup:
+    checks:
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
-            - uses: pdm-project/setup-pdm@v4
+            - uses: actions/setup-python@v5
               with:
-                  python-version: 3.11
-            - run: pdm install
+                  python-version: 3.12
+            - name: install
+              env:
+                  UV_SYSTEM_PYTHON: true
+              run: |
+                  pip install uv && uv pip install pdm
+                  pdm export --pyproject --dev --editable-self -o requirements.txt
+                  uv pip install -r requirements.txt
 
             - name: isort
-              run: pdm run isort . --check --diff
+              run: isort . --check --diff
 
             - name: black
-              run: pdm run black . --check --diff
+              run: black . --check --diff
 
             - name: ruff
-              run: pdm run ruff check --output-format github
+              run: ruff check --output-format github
 
             - name: pyright
-              run: pdm run npx pyright
+              run: npx pyright
