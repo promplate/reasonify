@@ -32,7 +32,7 @@ dev = [
   "micropip~=0.6.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
-  "pyodide-py~=0.26.0a5",
+  "pyodide-py==0.26.1",
 ]
 
 [tool.pdm.scripts]
@@ -52,4 +52,3 @@ line-length = 150
 
 [tool.pyright]
 reportMissingModuleSource = false
-pythonVersion = "3.12"
