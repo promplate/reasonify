@@ -47,12 +47,12 @@ def purify(html: str):
     return div.innerText
 
 
-sub_traling_spaces = re_compile(r"[ \t]+$", MULTILINE)
+sub_trailing_spaces = re_compile(r"[ \t]+$", MULTILINE)
 sub_multiple_lines = re_compile(r"\n{4,}")
 
 
 def post_process(text: str):
     text = text.replace("\r", "")
-    text = sub_traling_spaces.sub("", text)
+    text = sub_trailing_spaces.sub("", text)
     text = sub_multiple_lines.sub("\n\n\n", text)
     return text
