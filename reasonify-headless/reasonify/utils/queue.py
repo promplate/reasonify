@@ -5,7 +5,6 @@ END = object()
 
 class QueueWrapper[T]:
     def __init__(self):
-
         self.queue = Queue[T]()
 
     def __aiter__(self):

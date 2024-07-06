@@ -9,7 +9,6 @@ from .run import get_context
 
 
 def tool[T: Callable](function: T) -> T:
-
     get_context()[function.__name__] = function
 
     source = dedent(getsource(function))

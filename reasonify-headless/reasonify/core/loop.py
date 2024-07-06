@@ -44,7 +44,6 @@ main_loop = Chain(intro, Loop(main := Node(main)))
 @main.pre_process
 @dispatch_context
 def _(c: Context, queue=inject(lambda: QueueWrapper[str]()), results=inject(lambda: list[dict]())):
-
     @ensure_future
     @call
     async def job():

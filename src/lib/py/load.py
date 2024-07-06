@@ -61,7 +61,6 @@ def install_slugify():
 
 @create_proxy
 async def mount_native_fs():
-
     handle = await window.showDirectoryPicker()
     while await handle.requestPermission({"mode": "readwrite"}) != "granted":
         pass
