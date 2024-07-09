@@ -2,11 +2,8 @@
 
 -
   - source: |
-        reply("Let's consider generators first.")
+        await pip_install("promplate")  # we need to install it before using it because it is a 3-party package
 
   - source: |
-        await pip_install("promplate")
-
         import promplate
-
         dir(promplate)
