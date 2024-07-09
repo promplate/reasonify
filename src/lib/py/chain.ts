@@ -1,6 +1,6 @@
 import type { PyProxy } from "pyodide/ffi";
 
-import { toJs } from "./common";
+import { type PyProxyTo, toJs } from "./common";
 import generate from "./generate";
 import getGlobals from "./globals";
 import { getPy } from "./load";
@@ -11,14 +11,17 @@ export interface Chain {
   astream: <T extends object>(context: T) => AsyncGenerator<T & { result: string }>;
 }
 
-function asChain(chain: PyProxy): Chain {
+type ChainContext<T> = PyProxyTo<T> & { result: string };
+
+function asChain(chain: PyProxy) {
   return {
-    async *astream(context) {
+    async *astream<T>(context: T) {
       const py = await getPy();
-      for await (const proxy of chain.astream(py.toPy(context), generate)) {
-        const { result } = proxy;
-        yield { ...toJs((proxy)), result };
+      let ctx: ChainContext<T>;
+      for await (ctx of chain.astream(py.toPy(context), generate)) {
+        yield { ...toJs((ctx)), result: ctx.result };
       }
+      yield { ...toJs((ctx!)), result: ctx!.result };
     },
   };
 }
