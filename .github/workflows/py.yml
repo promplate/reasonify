@@ -28,3 +28,37 @@ jobs:
 
             - name: pyright
               run: npx pyright
+
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: 3.12
+            - name: build
+              run: |
+                  pip install uv
+                  uv venv
+                  uv tool run pdm build
+
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: dist
+                  path: dist
+
+    publish:
+        runs-on: ubuntu-latest
+        needs: [build, checks]
+        permissions:
+            id-token: write
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                  name: dist
+                  path: dist
+            - uses: pypa/gh-action-pypi-publish@release/v1
+              with:
+                  skip-existing: true
+                  print-hash: true
+                  verbose: true

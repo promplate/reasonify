@@ -5,6 +5,7 @@ license = { text = "MIT" }
 dynamic = [ "version" ]
 requires-python = ">=3.12"
 authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
+readme = "README.md"
 dependencies = [
   "useful-coderunner~=1.0 ; sys_platform != 'emscripten'",
   "promplate~=0.3.4.7",
@@ -47,7 +48,7 @@ fmt = { composite = [
 dev = { cmd = [
   "watchfiles",
   "pdm build --no-sdist -d static/whl",
-  "reasonify-headless"
+  "reasonify-headless",
 ] }
 
 [tool.black]
