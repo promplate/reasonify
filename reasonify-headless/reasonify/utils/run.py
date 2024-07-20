@@ -21,7 +21,7 @@ def get_context() -> Context:
 
 
 def is_different(a, b):
-    if type(a) == type(b) and type(a) in (dict, list, tuple, set, frozenset):
+    if type(a) is type(b) and type(a) in (dict, list, tuple, set, frozenset):
         return a != b
     return a is not b
 
