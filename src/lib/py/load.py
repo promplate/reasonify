@@ -72,8 +72,6 @@ async def mount_native_fs():
 
     fs = await mount(path := str(root / name), handle)
 
-    chdir(path)
-
     mounted[path] = fs
 
     return name
