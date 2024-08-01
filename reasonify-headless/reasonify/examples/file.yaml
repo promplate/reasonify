@@ -3,10 +3,10 @@
 -
   - source: |
         from pathlib import Path
-        paths = list(Path("/workspace/mnt").glob("**/*"))
+        paths = list(Path("/workspace/mnt").glob("**/*"))[:100]
 
   - source: |
-        reply(f"I can see these top level files/dirs: {", ".join(map(str, paths))}")
+        reply(f"I can these files/dirs: {", ".join(map(str, paths))}")
 
 - I just uploaded a PNG file, can you find it?
 
