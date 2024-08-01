@@ -9,7 +9,7 @@ class Injector[T]:
         self.getter = getter
 
 
-def dispatch_context[T](func: Callable[..., T]) -> Callable[[dict], T]:
+def dispatch_context[T](func: Callable[..., T]) -> Callable[..., T]:
     injectors = {}
     defaults = {}
 
@@ -25,7 +25,8 @@ def dispatch_context[T](func: Callable[..., T]) -> Callable[[dict], T]:
 
     params = list(params)
 
-    def wrapper(context: dict):
+    def wrapper(*args):
+        *args, context = args  # only the last one is `context`, the rest are positional arguments (such as `self`)
         c = Context.ensure(context)
 
         for k, v in defaults.items():
@@ -36,7 +37,7 @@ def dispatch_context[T](func: Callable[..., T]) -> Callable[[dict], T]:
             if k not in c:
                 c[k] = v()
 
-        return func(**{name: c[name] if name != "c" else c for name in params})
+        return func(*args, **{name: c[name] if name != "c" else c for name in params[len(args) :]})
 
     return wrapper
 

@@ -1,15 +1,14 @@
-from asyncio import Future, ensure_future
-from operator import call
+from asyncio import ensure_future
 
 from partial_json_parser import Allow
-from promplate import Chain, Jump, Loop, Message, Node
+from promplate import Callback, Chain, Jump, Loop, Message, Node
 from promplate.prompt.chat import assistant, system, user
 from promplate_recipes.functional.node import SimpleNode
 
 from ..examples import get_examples
 from ..templates import main
 from ..utils.context import Context, new_checkpoint
-from ..utils.inject import dispatch_context, inject
+from ..utils.inject import dispatch_context
 from ..utils.queue import QueueWrapper
 from ..utils.run import get_context, run
 from ..utils.serialize import json
@@ -41,50 +40,47 @@ async def _(context: dict):
 main_loop = Chain(intro, Loop(main := Node(main)))
 
 
-@main.pre_process
-@dispatch_context
-def _(c: Context, queue=inject(lambda: QueueWrapper[str]()), results=inject(lambda: list[dict]())):
-    @ensure_future
-    @call
-    async def job():
-        async for source in queue:
-            results.append(await run(source))
+@main.callback
+class _(Callback):
+    async def run_jobs_until_end(self):
+        async for source in self._queue:
+            self.results.append(await run(source))
 
-    c.update({"future": job, "index": 0})
+    @dispatch_context
+    def pre_process(self, c: Context):
+        self._queue = QueueWrapper[str]()
+        self._index = 0
+        self._pure_text = False
+        self.results = c["results"] = list[dict]()
+        self.future = ensure_future(self.run_jobs_until_end())
 
+    @dispatch_context
+    def mid_process(self, c: Context, response: list[str]):
+        c["sources"] = c.extract_json([])
 
-@main.mid_process
-@dispatch_context
-def _(c: Context, index: int, queue: QueueWrapper[str], response: list[str], pure_text=False):
-    c["sources"] = c.extract_json([])
+        if self._pure_text:
+            response[-1] = c.result
+            return
 
-    if pure_text:
-        response[-1] = c.result
-        return
+        sources = c.extract_json(None, list[str], ~Allow.STR)
+        if sources is None:
+            response.append(c.result)
+            self._pure_text = True
+        else:
+            for source in sources[self._index :]:
+                self._queue.put(source)
+                self._index += 1
 
-    sources = c.extract_json(None, list[str], ~Allow.STR)
-    if sources is None:
-        response.append(c.result)
-        return c.update({"pure_text": True})
+    @dispatch_context
+    async def end_process(self, messages: list[Message], response: list, sources: list):
+        self._queue.end()
+        await self.future
 
-    for source in sources[index:]:
-        queue.put(source)
-        c["index"] += 1
+        if sources:
+            messages.append(assistant > json(sources))
+            messages.append(system @ "results" > json(self.results))
 
+        if not response:
+            return  # next round
 
-@main.end_process
-@dispatch_context
-async def _(c: Context, queue: QueueWrapper, future: Future, messages: list[Message], response: list, sources: list, results: list):
-    queue.end()
-    await future
-
-    del c["future"], c["queue"], c["pure_text"]
-
-    if sources:
-        messages.append(assistant > json(sources))
-        messages.append(system @ "results" > json(results))
-
-    if not response:
-        return  # next round
-
-    raise Jump(out_of=main_loop)  # already responded or nothing generated
+        raise Jump(out_of=main_loop)  # already responded or nothing generated
