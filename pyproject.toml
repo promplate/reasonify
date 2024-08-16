@@ -36,7 +36,7 @@ dev = [
   "micropip~=0.6.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
-  "pyodide-py==0.26.1",
+  "pyodide-py==0.26.2",
 ]
 
 [tool.pdm.scripts]
