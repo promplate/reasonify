@@ -48,15 +48,20 @@ class _(Callback):
 
     @dispatch_context
     def pre_process(self, c: Context):
+        if "sources" not in c:
+            c["sources"] = []
+        if "results" not in c:
+            c["results"] = []
+
         self._queue = QueueWrapper[str]()
-        self._index = 0
+        self._index = self._last = len(c["sources"])
         self._pure_text = False
-        self.results = c["results"] = list[dict]()
+        self.results: list[dict] = c["results"]
         self.future = ensure_future(self.run_jobs_until_end())
 
     @dispatch_context
     def mid_process(self, c: Context, response: list[str]):
-        c["sources"] = c.extract_json([])
+        c["sources"][self._last :] = c.extract_json([])
 
         if self._pure_text:
             response[-1] = c.result
@@ -67,7 +72,7 @@ class _(Callback):
             response.append(c.result)
             self._pure_text = True
         else:
-            for source in sources[self._index :]:
+            for source in sources[self._index - self._last :]:
                 self._queue.put(source)
                 self._index += 1
 

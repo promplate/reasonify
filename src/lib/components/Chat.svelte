@@ -68,7 +68,7 @@
         {/if}
         <div class="absolute right-0 top-0 flex flex-row translate-x-0.25em select-none items-center text-7xl op-5 -translate-y-2/7">
           <span class="font-bold font-fira">&lt;/</span>
-          <span class="font-fancy">{ctx.index ?? 0}</span>
+          <span class="font-fancy">{ctx.results?.length ?? 0}</span>
           <span class="font-bold font-fira">/&gt;</span>
         </div>
       </div>
