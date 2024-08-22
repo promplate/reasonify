@@ -10,7 +10,7 @@ class FetchFailed(Exception): ...
 
 
 @tool
-async def read_page(url: str, parse_as: Literal["innerText", "plain", "markdown"] = "plain") -> tuple[int, str]:
+async def read_page(url: str, parse_as: Literal["innerText", "plain", "markdown"] = "markdown") -> tuple[int, str]:
     """
     fetch the content of a web page,
     returns its status code and text content.
