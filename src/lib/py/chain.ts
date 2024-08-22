@@ -1,9 +1,10 @@
 import type { PyProxy } from "pyodide/ffi";
 
+import sources from "../../../reasonify-headless";
 import { type PyProxyTo, toJs } from "./common";
 import generate from "./generate";
-import getGlobals from "./globals";
 import { getPy } from "./load";
+import requirements from "./requirements";
 import { reasonifyReady } from "$lib/stores";
 import { startIconAnimation, stopIconAnimation } from "$lib/stores/icon";
 
@@ -29,18 +30,15 @@ function asChain(chain: PyProxy) {
 export async function initChain() {
   startIconAnimation();
 
-  const [py, { default: source }] = await Promise.all([
-    getPy(),
-    import("./load.py?raw"),
-  ]);
-  await py.runPythonAsync(source);
+  const py = await getPy();
 
-  const loadReasonify = await getGlobals<() => Promise<PyProxy>>("get_reasonify_chain")();
-
-  const chain = await loadReasonify();
-  reasonifyReady.set(true);
+  py.globals.set("sources", py.toPy(sources));
+  await py.pyimport("micropip.install")(requirements);
+  await py.runPythonAsync(sources["load.py"]);
 
   stopIconAnimation();
 
-  return asChain(chain);
+  reasonifyReady.set(true);
+
+  return asChain(py.pyimport("reasonify.chain"));
 }

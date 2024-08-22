@@ -1,10 +1,7 @@
-from asyncio import sleep
-from contextlib import suppress
 from functools import cache
-from os import chdir, getenv
+from os import chdir
 from pathlib import Path
 from typing import TYPE_CHECKING, Awaitable, Callable
-from zipfile import BadZipFile
 
 from js import FileSystemDirectoryHandle, window
 from micropip import install
@@ -12,30 +9,16 @@ from pyodide.ffi import create_once_callable, create_proxy
 from pyodide.webloop import PyodideFuture
 
 if TYPE_CHECKING:
+    sources: dict[str, str] = {}
 
     def with_toast[**Params, Return](message: str) -> Callable[[Callable[Params, Return]], Callable[Params, PyodideFuture[Return]]]: ...
 
 
-async def get_reasonify_chain():
-    requirement = getenv("PACKAGE", "reasonify-headless")
-    if requirement.endswith(".whl"):
-        r = requirement[requirement.index("reasonify") : requirement.index("-py3-none")].replace("-", "==").replace("_", "-")
-    else:
-        r = requirement
-
-    @with_toast(f"installing {r}")
-    @create_once_callable
-    async def install_reasonify():
-        while True:
-            with suppress(BadZipFile):
-                return await install(requirement)
-            await sleep(0.1)
-
-    await install_reasonify()
-
-    from reasonify import chain
-
-    return chain
+for path, source in sources.items():
+    file = Path(path)
+    if not file.parent.is_dir():
+        file.parent.mkdir(parents=True)
+    file.write_text(source, "utf-8")
 
 
 if TYPE_CHECKING:

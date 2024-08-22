@@ -10,7 +10,9 @@ jobs:
             - run: bun install
 
             - name: svelte-check
-              run: bun check
+              run: |
+                  echo "export default {} as Record<string, string>;" > reasonify-headless/index.d.ts
+                  bun check
 
             - name: eslint
               run: bun lint

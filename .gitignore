@@ -25,3 +25,5 @@ dist
 .idea
 
 /static/whl
+
+index.d.ts
