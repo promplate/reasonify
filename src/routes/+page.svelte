@@ -20,5 +20,6 @@
   <ol class="flex flex-col gap-2.5 whitespace-nowrap">
     <li><LoadingItem loading={!$pyodideReady} text="Loading pyodide v{pyodideVersion}" /></li>
     <li class:op-30={!$pyodideReady}><LoadingItem loading={!$reasonifyReady} text="Loading reasonify v{reasonifyVersion}" /></li>
+    <h2 class="text-xs op-30">首次加载可能需要几秒钟</h2>
   </ol>
 </Modal>

@@ -5,11 +5,13 @@
   import { type Chain, initChain } from "../py";
   import { clearApiCache, getApi } from "../py/api";
   import Highlight from "./Highlight.svelte";
+  import Intro from "./Intro.svelte";
   import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
   import { addFiles, mount } from "$lib/py/fs";
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { toast } from "svelte-sonner";
+  import { fly } from "svelte/transition";
 
   export let chain: Chain;
 
@@ -45,7 +47,32 @@
 
   $: running ? startIconAnimation() : stopIconAnimation();
 
+  function startWith(prompt: string) {
+    content = prompt;
+    start();
+  }
 </script>
+
+{#if !messages.length}
+  <Intro title="👋 Hi from Reasonify.">
+    <button in:fly|global={{ duration: 500, x: -5, delay: 100 }} on:click={() => startWith("阅读这个页面 https://mp.weixin.qq.com/s/voKXMpv8OiJUOzOqK4FSSg 然后告诉我，AI#DEA 这个比赛是谁举办的")}>
+      <div class="i-tabler-inner-shadow-bottom-right text-lg text-rose" />
+      AI#DEA 是谁举办的
+    </button>
+    <button in:fly|global={{ duration: 500, x: 5, delay: 150 }} on:click={() => startWith("搜索Google，计算《黑神话·悟空》自发售到现在，平均每小时增加多少用户量。")}>
+      <div class="i-tabler-building-lighthouse text-lg text-yellow" />
+      黑神话·悟空 每小时涨多少用户
+    </button>
+    <button in:fly|global={{ duration: 500, x: -5, delay: 300 }} on:click={() => startWith("用 matplotlib 给我画个华丽的爱心，四周有多个四角星。请确保不要画错成别的图形了！记得先安装！")}>
+      <div class="i-fluent-emoji-heart-with-ribbon text-lg text-blue" />
+      画个爱心
+    </button>
+    <button in:fly|global={{ duration: 500, x: 5, delay: 500 }} on:click={() => startWith("用 sklearn 的数据集，训练一个聚类模型，并可视化其结果")}>
+      <div class="i-tabler-brand-python text-lg text-blue" />
+      表演一个聚类算法
+    </button>
+  </Intro>
+{/if}
 
 <main class="mb-35 w-screen flex flex-col justify-between -mt-1px md:(mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))])">
   <div class="group w-full flex flex-col-reverse text-sm">
