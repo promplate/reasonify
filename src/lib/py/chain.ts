@@ -35,6 +35,7 @@ export async function initChain() {
   py.globals.set("sources", py.toPy(sources));
   await py.pyimport("micropip.install")(requirements);
   await py.runPythonAsync(sources["load.py"]);
+  py.pyimport("utils.ask.register_self_as_tool")(generate);
 
   stopIconAnimation();
 
