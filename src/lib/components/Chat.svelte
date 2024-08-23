@@ -3,11 +3,11 @@
   import type { PythonError } from "pyodide/ffi";
 
   import { type Chain, initChain } from "../py";
-  import { clearApiCache } from "../py/api";
+  import { clearApiCache, getApi } from "../py/api";
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
-  import { mount } from "$lib/py/fs";
+  import { addFiles, mount } from "$lib/py/fs";
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { toast } from "svelte-sonner";
 
@@ -101,11 +101,25 @@
       <div class="i-lucide-plane-takeoff" />
     </button>
     <button disabled={!$pyodideReady} on:click={async () => {
-      const name = await mount();
-      context.messages = [...messages, { role: "system", name: "info", content: `user mounted a directory: ./${name}` }];
+      const names = await addFiles();
+      context.messages = [...messages, { role: "system", name: "info", content: `user added ${names.length} files: ${(names.map(name => `./${name}`)).join(", ")}` }];
     }}>
       <div class="i-lucide-file-symlink" />
     </button>
+    {#if "showDirectoryPicker" in window}
+      <button disabled={!$pyodideReady} on:click={async () => {
+        const name = await mount();
+        context.messages = [...messages, { role: "system", name: "info", content: `user mounted a directory: ./${name}` }];
+      }}>
+        <div class="i-lucide-folder-symlink" />
+      </button>
+      <button disabled={!$pyodideReady} on:click={async () => {
+        const syncAll = getApi("api.fs.sync_all");
+        await syncAll();
+      }}>
+        <div class="i-lucide-hard-drive-download" />
+      </button>
+    {/if}
     {#if dev}
       <button disabled={refreshing} on:click={refresh}>
         <div class="i-lucide-refresh-cw" />
@@ -113,6 +127,7 @@
     {/if}
     <button disabled={!messages.length || running} on:click={() => {
       context = { query: content };
+      getApi("api.fs.reset")();
     }}>
       <div class="i-lucide-circle-fading-plus" />
     </button>

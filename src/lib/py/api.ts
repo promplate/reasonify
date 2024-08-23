@@ -2,7 +2,7 @@ import { py } from "./load";
 
 const cache = new Map<string, any>();
 
-export function getApi<T>(slug: string): T {
+export function getApi<T = () => any>(slug: string): T {
   if (cache.has(slug)) {
     return cache.get(slug) as T;
   } else {
