@@ -1,5 +1,5 @@
 <script>
-  import "@unocss/reset/tailwind-compat.css";
+  import "@unocss/reset/tailwind.css";
   import "@fontsource-variable/jetbrains-mono";
   import "@fontsource-variable/fira-code";
   import "uno.css";

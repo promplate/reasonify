@@ -7,7 +7,8 @@
 
   - source: |
         reply(f"I can these files/dirs: {", ".join(map(str, paths))}")
-        end_of_turn()
+-
+  - source: end_of_turn()
 
 - I just uploaded a PNG file, can you find it?
 
