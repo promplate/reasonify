@@ -29,6 +29,7 @@
     "openai": "^4.56.0",
     "pyodide": "0.26.2",
     "rehype-stringify": "^10.0.0",
+    "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "rollup-plugin-flatten-dir": "^1.0.1",

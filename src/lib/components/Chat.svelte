@@ -32,7 +32,7 @@
   }
 
   async function start() {
-    context = { ...context, query: content };
+    context = { ...context, query: content, result: undefined };
     running = true;
     try {
       for await (const i of chain.astream(context)) context = i;
@@ -64,7 +64,19 @@
           </section>
         {/if}
         {#if ctx.sources?.length}
-          <Highlight source={ctx.sources.join("\n")} lang="python" />
+          {#each ctx.sources as source, j}
+            {#if i === 0}
+              <!-- the last snapshot -->
+              <div class="transition-opacity" class:op-50={running && j + 1 !== ctx.sources.length && context.result}>
+                <div class="animate-(fade-in duration-300)">
+                  <Highlight {source} lang="python" />
+                </div>
+              </div>
+            {:else}
+              <!-- non-last snapshots -->
+              <Highlight {source} lang="python" />
+            {/if}
+          {/each}
         {/if}
         {#if ctx.results?.length}
           {@const entries = ctx.results.flatMap(Object.entries)}
