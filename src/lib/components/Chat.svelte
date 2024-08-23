@@ -2,13 +2,12 @@
   import type { Context } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
-  import { type Chain, getPy, initChain } from "../py";
+  import { type Chain, initChain } from "../py";
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
   import { mount } from "$lib/py/fs";
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
-  import { globalCache } from "$lib/utils/cache";
   import { toast } from "svelte-sonner";
 
   export let chain: Chain;
@@ -23,9 +22,6 @@
   async function refresh() {
     refreshing = true;
     try {
-      getPy.invalidateCache();
-      globalCache.clear();
-      $pyodideReady = false;
       $reasonifyReady = false;
       chain = await initChain();
     } finally {
