@@ -47,10 +47,10 @@
 
 </script>
 
-<main class="mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))] flex flex-col justify-between">
+<main class="mb-35 w-screen flex flex-col justify-between -mt-1px md:(mb-50 mt-10 w-[min(70rem,calc(100vw-5rem))])">
   <div class="group w-full flex flex-col-reverse text-sm">
     {#each context?.snapshots ?? [] as ctx, i}
-      <div class="relative flex flex-col gap-4.5 overflow-scroll border-t-1 border-neutral-6 border-dashed px-7 py-7 hover:(border-neutral-4 border-solid bg-white/2)">
+      <div class="relative flex flex-col gap-4.5 overflow-scroll border-t-1 border-neutral-6 border-dashed p-5 hover:(border-neutral-4 border-solid bg-white/2) md:p-7">
         <div>
           <span class="bg-neutral-2 text-neutral-9">
             {messages.filter(msg => msg.role === "user").at(-1 - i)?.content}
@@ -94,9 +94,9 @@
   </div>
 </main>
 
-<div class="fixed bottom-10 left-1/2 w-[min(70rem,calc(100vw-5rem))] rounded bg-neutral-8/90 -translate-x-1/2">
-  <textarea class="h-40 w-full resize-none bg-transparent p-7 outline-none placeholder-neutral-5" placeholder="type your query here" bind:value={content} />
-  <div class="absolute bottom-6 right-6 flex flex-row gap-3 [&>button]:(grid place-items-center rounded bg-white p-3 text-lg text-neutral-9 transition) [&>button:disabled]:(bg-white/10 text-white)">
+<div class="fixed bottom-0 left-0 w-full bg-neutral-8/90 md:(bottom-10 left-1/2 w-[min(70rem,calc(100vw-5rem))] rounded -translate-x-1/2)">
+  <textarea class="h-35 w-full resize-none bg-transparent p-5 outline-none md:h-40 md:p-7 <md:text-sm placeholder-neutral-5" placeholder="type your query here" bind:value={content} />
+  <div class="absolute bottom-4 right-4 flex flex-row gap-2 md:(bottom-6 right-6 gap-3) [&>button]:(grid place-items-center rounded bg-white p-2 text-neutral-9 transition md:p-3 md:text-lg) [&>button:disabled]:(bg-white/10 text-white)">
     <button disabled={!content || running} on:click={start}>
       <div class="i-lucide-plane-takeoff" />
     </button>
