@@ -15,5 +15,5 @@ for path, source in sources.items():
 
 if __debug__:
     for module in tuple(sys.modules):  # for HMR
-        if module.startswith("reasonify"):
-            sys.modules.pop(module).__dict__.clear()
+        if module.startswith("reasonify") or module.startswith("promplate_recipes"):
+            del sys.modules[module]
