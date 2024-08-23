@@ -3,6 +3,7 @@
   import type { PythonError } from "pyodide/ffi";
 
   import { type Chain, initChain } from "../py";
+  import { clearApiCache } from "../py/api";
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
   import { dev } from "$app/environment";
@@ -23,6 +24,7 @@
     refreshing = true;
     try {
       $reasonifyReady = false;
+      clearApiCache();
       chain = await initChain();
     } finally {
       refreshing = false;
