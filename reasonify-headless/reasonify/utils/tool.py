@@ -31,5 +31,10 @@ def stubfile():
 
 
 @tool
-def reply(_):
+def reply(*_):
+    """placeholder for examples to be runnable"""
+
+
+@tool
+def end_of_turn():
     """placeholder for examples to be runnable"""

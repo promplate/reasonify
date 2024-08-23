@@ -25,6 +25,7 @@
             print(i)
 
         reply("Do you want to know more about async generators?")
+        end_of_turn()
 
 - Yes! How can I `yield from` an async generator?
 
@@ -45,3 +46,4 @@
         await g()
 
         reply("This will print 1, 2, 3.")
+        end_of_turn()

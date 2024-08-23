@@ -7,3 +7,5 @@
   - source: |
         import promplate
         dir(promplate)
+-
+  - source: end_of_turn()

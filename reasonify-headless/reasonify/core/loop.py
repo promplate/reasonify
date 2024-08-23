@@ -10,7 +10,7 @@ from ..templates import main
 from ..utils.context import Context, new_checkpoint
 from ..utils.inject import dispatch_context
 from ..utils.queue import QueueWrapper
-from ..utils.run import get_context, run
+from ..utils.run import run
 from ..utils.serialize import json
 from ..utils.tool import tool
 
@@ -21,13 +21,17 @@ async def intro(c: Context, query: str, messages: list[Message]):
     messages.append(user > query)
 
     response = c["response"] = []
+    c["end"] = False
 
     @tool
-    def reply(message: str):
+    def reply(*messages: str):
         """talk to the user"""
-        response.append(message)
+        response.extend(messages)
 
-    get_context()["reply"] = reply
+    @tool
+    def end_of_turn():
+        """end this round of conversation and pass the microphone to the user"""
+        c["end"] = True
 
 
 @intro.pre_process
@@ -77,7 +81,7 @@ class _(Callback):
                 self._index += 1
 
     @dispatch_context
-    async def end_process(self, messages: list[Message], response: list, sources: list):
+    async def end_process(self, messages: list[Message], end: bool, sources: list):
         self._queue.end()
         await self.future
 
@@ -85,7 +89,7 @@ class _(Callback):
             messages.append(assistant > json(sources))
             messages.append(system @ "results" > json(self.results))
 
-        if not response:
+        if not end:
             return  # next round
 
         raise Jump(out_of=main_loop)  # already responded or nothing generated
