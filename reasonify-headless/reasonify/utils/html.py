@@ -1,6 +1,6 @@
 from re import MULTILINE
 from re import compile as re_compile
-from typing import Literal
+from typing import Literal, cast
 
 sub_trailing_spaces = re_compile(r"[ \t]+$", MULTILINE)
 sub_multiple_lines = re_compile(r"\n{4,}")
@@ -19,11 +19,11 @@ Strategy = Literal["innerText", "plain", "markdown"]
 def pre_process(html: str, strategy: Strategy = "innerText"):
     match strategy:
         case "innerText":
-            from .dom import temp_element
+            from js import DOMParser, HTMLElement
 
-            with temp_element() as div:
-                div.innerHTML = html
-                return div.innerText
+            document = DOMParser.new().parseFromString(html, "text/html")
+            document.normalize()
+            return cast(HTMLElement, document.documentElement).innerText
 
         case "plain":
             from html_text import extract_text
