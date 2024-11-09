@@ -41,7 +41,7 @@ async def _(context: dict):
     new_checkpoint(context)
 
 
-main_loop = Chain(intro, Loop(main := Node(main)))
+main_loop = Chain(intro, loop := Loop(main := Node(main)))
 
 
 @main.callback
@@ -81,15 +81,19 @@ class _(Callback):
                 self._index += 1
 
     @dispatch_context
-    async def end_process(self, messages: list[Message], end: bool, sources: list):
+    async def end_process(self):
         self._queue.end()
         await self.future
 
-        if sources:
-            messages.append(assistant > json(sources))
-            messages.append(system @ "results" > json(self.results))
 
-        if not end:
-            return  # next round
+@loop.end_process
+@dispatch_context
+async def _(messages: list[Message], end: bool, sources: list, results: list[dict]):
+    if sources:
+        messages.append(assistant > json(sources))
+        messages.append(system @ "results" > json(results))
 
-        raise Jump(out_of=main_loop)  # already responded or nothing generated
+    if not end:
+        return  # next round
+
+    raise Jump(out_of=main_loop)  # already responded or nothing generated
