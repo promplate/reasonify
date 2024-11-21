@@ -3,7 +3,7 @@ name = "reasonify-headless"
 description = "headless implementation for the Reasonify Agent"
 license = { text = "MIT" }
 dynamic = [ "version" ]
-requires-python = ">=3.12"
+requires-python = "~=3.12"
 authors = [ { name = "Muspi Merol", email = "me@promplate.dev" } ]
 readme = "README.md"
 dependencies = [
@@ -16,6 +16,7 @@ dependencies = [
   "html-text~=0.6.2",
   "html2text2~=1.0.0",
   "isomorphic-fetch~=0.0.0.0.dev2",
+  "python-readability~=0.0.2",
 ]
 
 [build-system]

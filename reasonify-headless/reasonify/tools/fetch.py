@@ -32,4 +32,8 @@ async def _fetch(url: str, strategy: Strategy):
     except OSError:
         res = await fetch(f"/api/proxy?url={url}")
 
-    return res.status, post_process(pre_process(res.text, strategy))
+    from readability import parse
+
+    text = parse(res.text, keep_classes=True).content or res.text
+
+    return res.status, post_process(pre_process(text, strategy))
