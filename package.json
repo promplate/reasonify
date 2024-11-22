@@ -20,7 +20,7 @@
     "@sveltejs/adapter-auto": "^3.2.4",
     "@sveltejs/kit": "^2.5.24",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
-    "@unocss/eslint-config": "^0.62.2",
+    "@unocss/eslint-config": "^0.64.1",
     "@unocss/extractor-svelte": "^0.62.2",
     "@unocss/reset": "^0.62.2",
     "eslint": "^9.9.0",
