@@ -1,5 +1,3 @@
-from typing import Literal
-
 from isomorphic_fetch import fetch
 
 from ..utils.html import Strategy, post_process, pre_process
@@ -10,7 +8,7 @@ class FetchFailed(Exception): ...
 
 
 @tool
-async def read_page(url: str, parse_as: Literal["innerText", "plain", "markdown"] = "markdown") -> tuple[int, str]:
+async def read_page(url: str, parse_as: Strategy = "markdown") -> tuple[int, str]:
     """
     fetch the content of a web page,
     returns its status code and text content.

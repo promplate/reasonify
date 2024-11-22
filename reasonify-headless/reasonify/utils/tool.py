@@ -1,5 +1,4 @@
-from inspect import getsource
-from textwrap import dedent
+from inspect import Signature
 from typing import Callable
 
 from promplate_recipes.functional.component import SimpleComponent
@@ -11,12 +10,7 @@ from .run import get_context
 def tool[T: Callable](function: T) -> T:
     get_context()[function.__name__] = function
 
-    source = dedent(getsource(function))
-
-    signature = source[: source.index('"""')]
-    docstring = function.__doc__
-
-    stubs[function.__name__] = "\n".join(f'{signature}"""{docstring}"""'.split("\n")[1:])  # exclude the first line `@tool`
+    stubs[function.__name__] = f'def {function.__name__}{Signature.from_callable(function, eval_str=True)}:\n    """{function.__doc__}"""'
 
     return function
 
