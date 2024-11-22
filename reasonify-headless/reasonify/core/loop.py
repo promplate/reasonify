@@ -36,7 +36,8 @@ async def intro(c: Context, query: str, messages: list[Message]):
 
 @intro.pre_process
 async def _(context: dict):
-    context["few_shot"] = await get_examples()
+    if "few_shot" not in context:
+        context["few_shot"] = await get_examples()
     context["messages"] = context.get("messages", [])
     new_checkpoint(context)
 
