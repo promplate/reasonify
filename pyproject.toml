@@ -9,7 +9,7 @@ readme = "README.md"
 dependencies = [
   "useful-coderunner~=1.0 ; sys_platform != 'emscripten'",
   "promplate~=0.3.4.7",
-  "python-box>=7.1.1,<7.3.0",
+  "python-box>=7.1.1,<7.4.0",
   "promptools[validation]~=0.1.3.4",
   "promplate-recipes>=0.2.2.1,<0.2.4.0",
   "pyyaml~=6.0.1",
