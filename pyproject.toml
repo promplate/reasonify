@@ -27,7 +27,7 @@ build = { package-dir = "reasonify-headless" }
 version = { source = "file", path = "reasonify-headless/version.py" }
 distribution = true
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
   "pre-commit>=3.7.1",
   "black>=24.4.2",
@@ -59,4 +59,5 @@ line-length = 150
 line-length = 150
 
 [tool.pyright]
+typeCheckingMode = "standard"
 reportMissingModuleSource = false
