@@ -1,11 +1,14 @@
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-    setup:
+    lint:
         runs-on: ubuntu-latest
-
+        permissions:
+            contents: write
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 2
             - uses: oven-sh/setup-bun@v2
             - run: bun install
 
@@ -16,3 +19,12 @@ jobs:
 
             - name: eslint
               run: bun lint
+
+            - name: fix
+              if: failure() && github.event_name == 'pull_request'
+              run: |
+                  bun lint --fix
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git commit --all -m "fix: auto-fix eslint errors"
+                  git push origin HEAD:refs/heads/${{ github.head_ref }}
