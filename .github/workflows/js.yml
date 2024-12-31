@@ -7,8 +7,6 @@ jobs:
             contents: write
         steps:
             - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 2
             - uses: oven-sh/setup-bun@v2
             - run: bun install
 
@@ -23,8 +21,10 @@ jobs:
             - name: fix
               if: failure() && github.event_name == 'pull_request'
               run: |
+                  git fetch origin ${{ github.event.pull_request.head.ref }} --depth=1
+                  git switch ${{ github.event.pull_request.head.ref }}
                   bun lint --fix
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
                   git commit --all -m "fix: auto-fix eslint errors"
-                  git push origin HEAD:refs/heads/${{ github.head_ref }}
+                  git push
