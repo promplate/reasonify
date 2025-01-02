@@ -1,4 +1,5 @@
 from asyncio import ensure_future
+from json import dumps
 
 from partial_json_parser import Allow
 from promplate import Callback, Chain, Jump, Loop, Message, Node
@@ -61,22 +62,36 @@ class _(Callback):
         self._queue = QueueWrapper[str]()
         self._index = self._last = len(c["sources"])
         self._pure_text = False
+        self.sources: list[str] = c["sources"]
         self.results: list[dict] = c["results"]
         self.future = ensure_future(self.run_jobs_until_end())
 
     @dispatch_context
     def mid_process(self, c: Context, response: list[str]):
-        c["sources"][self._last :] = c.extract_json([])
-
-        if self._pure_text:
-            response[-1] = c.result
+        if not c.result:  # "" in the first yield
             return
 
+        parsed_sources = c.extract_json(None, list[str])
+
+        if parsed_sources is None:
+            if fine_sources := self.sources[self._last : self._index]:
+                # malformed json in the end
+                c.result = dumps(fine_sources, ensure_ascii=False, indent=2)
+
+            # not json at all
+            elif self._pure_text:
+                response[-1] = c.result  # update the simple replying
+            else:
+                response.append(c.result)  # treat it as simple replying
+                self._pure_text = True
+
+            return
+
+        # normal cases
+        self.sources[self._last :] = parsed_sources
+
         sources = c.extract_json(None, list[str], ~Allow.STR)
-        if sources is None:
-            response.append(c.result)
-            self._pure_text = True
-        else:
+        if sources is not None:
             for source in sources[self._index - self._last :]:
                 self._queue.put(source)
                 self._index += 1
