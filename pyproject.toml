@@ -33,10 +33,10 @@ dev = [
   "isort>=5.13.2",
   "ruff>=0.5.3",
   "watchfiles>=0.22.0",
-  "micropip~=0.6.0",
+  "micropip~=0.8.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
-  "pyodide-py==0.26.2",
+  "pyodide-py==0.27.0",
 ]
 
 [tool.pdm.scripts]
