@@ -3,15 +3,15 @@ from typing import Literal
 from promplate.prompt.chat import Message, assistant, system, user
 from pydantic import BaseModel, Field
 
-from ..utils.run import run
+from ..utils.run import Result, run
 from ..utils.serialize import json
 
 
 class Run(BaseModel):
     source: str
-    result: dict | Literal[False] | None = None
+    result: Result | Literal[False] | None = None
 
-    async def ensure_result(self) -> dict | str:
+    async def ensure_result(self) -> Result | str:
         match self.result:
             case False:
                 return "<omitted>"

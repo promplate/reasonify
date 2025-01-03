@@ -11,7 +11,7 @@ from ..templates import main
 from ..utils.context import Context, new_checkpoint
 from ..utils.inject import dispatch_context
 from ..utils.queue import QueueWrapper
-from ..utils.run import run
+from ..utils.run import Result, run
 from ..utils.serialize import json
 from ..utils.tool import tool
 
@@ -63,7 +63,7 @@ class _(Callback):
         self._index = self._last = len(c["sources"])
         self._pure_text = False
         self.sources: list[str] = c["sources"]
-        self.results: list[dict] = c["results"]
+        self.results: list[Result] = c["results"]
         self.future = ensure_future(self.run_jobs_until_end())
 
     @dispatch_context

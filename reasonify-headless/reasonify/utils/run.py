@@ -4,7 +4,7 @@ from io import StringIO
 from itertools import count
 from json import loads
 from traceback import format_exception, format_exception_only, walk_tb
-from typing import Callable
+from typing import Callable, TypedDict
 
 from promplate import Context
 
@@ -33,8 +33,11 @@ def diff_context(context_in: Context, context_out: Context):
 
 counter = count(1).__next__
 
+type JSON = str | bool | int | float | list[JSON] | dict[str, JSON] | None
+Result = TypedDict("Result", {"global values": dict[str, JSON], "stdout/stderr": str, "return": JSON}, total=False)
 
-async def run(source: str):
+
+async def run(source: str) -> Result:
     filename = f"In[{counter()}]"
 
     context = get_context()
