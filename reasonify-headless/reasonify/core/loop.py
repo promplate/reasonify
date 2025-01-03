@@ -9,6 +9,7 @@ from promplate_recipes.functional.node import SimpleNode
 from ..examples import get_examples
 from ..templates import main
 from ..utils.context import Context, new_checkpoint
+from ..utils.event import trigger_event
 from ..utils.inject import dispatch_context
 from ..utils.queue import QueueWrapper
 from ..utils.run import Result, run
@@ -20,6 +21,7 @@ from ..utils.tool import tool
 @dispatch_context
 async def intro(c: Context, query: str, messages: list[Message]):
     messages.append(user > query)
+    trigger_event()
 
     response = c["response"] = []
     c["end"] = False
@@ -41,6 +43,7 @@ async def _(context: dict):
         context["few_shot"] = await get_examples()
     context["messages"] = context.get("messages", [])
     new_checkpoint(context)
+    trigger_event()
 
 
 main_loop = Chain(intro, loop := Loop(main := Node(main)))
@@ -51,6 +54,7 @@ class _(Callback):
     async def run_jobs_until_end(self):
         async for source in self._queue:
             self.results.append(await run(source))
+            trigger_event()
 
     @dispatch_context
     def pre_process(self, c: Context):
@@ -70,6 +74,8 @@ class _(Callback):
     def mid_process(self, c: Context, response: list[str]):
         if not c.result:  # "" in the first yield
             return
+
+        trigger_event()
 
         parsed_sources = c.extract_json(None, list[str])
 

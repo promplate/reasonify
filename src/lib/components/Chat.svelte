@@ -2,7 +2,7 @@
   import type { Context } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
-  import { type Chain, initChain } from "../py";
+  import { type AgentWrapper, initChain } from "../py";
   import { clearApiCache, getApi } from "../py/api";
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
@@ -11,12 +11,12 @@
   import { pyodideReady, reasonifyReady, startIconAnimation, stopIconAnimation } from "$lib/stores";
   import { toast } from "svelte-sonner";
 
-  export let chain: Chain;
+  export let chain: AgentWrapper;
 
   let content = "";
   let running = false;
   let refreshing = false;
-  let context: Context = { query: content };
+  let context: Context | undefined;
 
   $: messages = context?.messages ?? [];
 
@@ -32,10 +32,9 @@
   }
 
   async function start() {
-    context = { ...context, query: content, result: undefined };
     running = true;
     try {
-      for await (const i of chain.astream(context)) context = i;
+      for await (const i of chain.astream({ query: content })) context = i;
     } catch (e) {
       toast.error((e as PythonError).message);
     } finally {
@@ -67,7 +66,7 @@
           {#each ctx.sources as source, j}
             {#if i === 0}
               <!-- the last snapshot -->
-              <div class="transition-opacity" class:op-50={running && j + 1 !== ctx.sources.length && context.result}>
+              <div class="transition-opacity" class:op-50={running && j + 1 !== ctx.sources.length && ctx.sources.length !== ctx.results?.length}>
                 <div class="animate-(fade-in duration-300)">
                   <Highlight {source} lang="python" />
                 </div>
@@ -102,14 +101,14 @@
     </button>
     <button disabled={!$pyodideReady} on:click={async () => {
       const names = await addFiles();
-      context.messages = [...messages, { role: "system", name: "info", content: `user added ${names.length} files: ${(names.map(name => `./${name}`)).join(", ")}` }];
+      chain.pushMessage({ role: "system", name: "info", content: `user added ${names.length} files: ${(names.map(name => `./${name}`)).join(", ")}` });
     }}>
       <div class="i-lucide-file-symlink" />
     </button>
     {#if "showDirectoryPicker" in window}
       <button disabled={!$pyodideReady} on:click={async () => {
         const name = await mount();
-        context.messages = [...messages, { role: "system", name: "info", content: `user mounted a directory: ./${name}` }];
+        chain.pushMessage({ role: "system", name: "info", content: `user mounted a directory: ./${name}` });
       }}>
         <div class="i-lucide-folder-symlink" />
       </button>
@@ -126,8 +125,9 @@
       </button>
     {/if}
     <button disabled={!messages.length || running} on:click={() => {
-      context = { query: content };
+      context = undefined;
       getApi("api.fs.reset")();
+      chain.reset();
     }}>
       <div class="i-lucide-circle-fading-plus" />
     </button>
