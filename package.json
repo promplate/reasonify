@@ -17,7 +17,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.0.22",
     "@iconify/json": "^2.2.239",
     "@shikijs/rehype": "^1.14.1",
-    "@sveltejs/adapter-auto": "^3.2.4",
+    "@sveltejs/adapter-auto": "^4.0.0",
     "@sveltejs/kit": "^2.5.24",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@unocss/eslint-config": "^65.4.2",
