@@ -1,8 +1,9 @@
 <script lang="ts">
+  import type { AgentWrapper } from "../py";
   import type { Context } from "../types";
   import type { PythonError } from "pyodide/ffi";
 
-  import { type AgentWrapper, initChain } from "../py";
+  import { initChain } from "../py";
   import { clearApiCache, getApi } from "../py/api";
   import Highlight from "./Highlight.svelte";
   import Markdown from "./Markdown.svelte";
