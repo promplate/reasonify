@@ -1,7 +1,8 @@
+import type { PyProxyTo } from "./common";
 import type { Message } from "$lib/types";
 import type { ChatCompletionCreateParams } from "openai/resources/index.mjs";
 
-import { type PyProxyTo, toJs } from "./common";
+import { toJs } from "./common";
 import getGlobals from "./globals";
 import chat from "$lib/chat";
 
