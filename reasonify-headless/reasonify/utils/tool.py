@@ -24,7 +24,7 @@ stubs = {}
 @register_component("stubs")
 @SimpleComponent
 def stubfile():
-    return f"```py\n{"\n\n".join(stubs.values())}\n```"
+    return f"```py\n{'\n\n'.join(stubs.values())}\n```"
 
 
 @tool
