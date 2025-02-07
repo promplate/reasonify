@@ -25,13 +25,3 @@ stubs = {}
 @SimpleComponent
 def stubfile():
     return f"```py\n{'\n\n'.join(stubs.values())}\n```"
-
-
-@tool
-def reply(*_):
-    """placeholder for examples to be runnable"""
-
-
-@tool
-def end_of_turn():
-    """placeholder for examples to be runnable"""
