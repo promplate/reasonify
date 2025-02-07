@@ -9,7 +9,7 @@ from ..utils.serialize import json
 
 class Run(BaseModel):
     source: str
-    result: Result | Literal[False] | None = None
+    result: dict | Literal[False] | None = None
 
     async def ensure_result(self) -> Result | str:
         match self.result:
@@ -18,7 +18,15 @@ class Run(BaseModel):
             case None:
                 return await run(self.source)
             case _:
-                return self.result
+                mixed = self.result
+                result: Result = {}
+                if "return" in mixed:
+                    result["return"] = mixed.pop("return")
+                if "stdout/stderr" in mixed:
+                    result["stdout/stderr"] = mixed.pop("stdout/stderr")
+                if mixed:
+                    result["global values"] = mixed
+                return result
 
 
 class Shot(BaseModel):
