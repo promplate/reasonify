@@ -29,7 +29,7 @@ async def intro(c: Context, query: str, messages: list[Message]):
     @tool
     def reply(*messages: str):
         """talk to the user"""
-        response.extend(messages)
+        response.extend(map(str, messages))
 
     @tool
     def end_of_turn():
