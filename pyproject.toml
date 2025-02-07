@@ -28,15 +28,15 @@ distribution = true
 
 [dependency-groups]
 dev = [
-  "pre-commit>=3.7.1",
-  "black>=24.4.2",
-  "isort>=5.13.2",
-  "ruff>=0.5.3",
-  "watchfiles>=0.22.0",
+  "pre-commit>=4.1",
+  "black>=25.1",
+  "isort>=6.0",
+  "ruff>=0.9",
+  "watchfiles>=1.0",
   "micropip~=0.8.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
-  "pyodide-py==0.27.0",
+  "pyodide-py==0.27.2",
 ]
 
 [tool.pdm.scripts]
