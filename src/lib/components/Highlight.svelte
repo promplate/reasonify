@@ -2,14 +2,14 @@
   import type { BundledLanguage, BundledTheme } from "shiki";
 
   import { cached } from "$lib/utils/cache";
-  import { getHighlighter } from "shiki";
+  import { getSingletonHighlighter } from "shiki";
 
   export let lang: BundledLanguage | "ansi" | "text";
   export let source: string;
   export let theme: BundledTheme = "vesper";
 
   async function highlight(source: string) {
-    const highlighter = await cached(lang + theme)(() => getHighlighter({ langs: [lang], themes: [theme] }))();
+    const highlighter = await cached(lang + theme)(() => getSingletonHighlighter({ langs: [lang], themes: [theme] }))();
 
     return highlighter.codeToHtml(source, { lang, theme });
   }
