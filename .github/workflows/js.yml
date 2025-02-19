@@ -13,17 +13,17 @@ jobs:
             - name: svelte-check
               run: |
                   echo "export default {} as Record<string, string>;" > reasonify-headless/index.d.ts
-                  bun check
+                  bun -b check
 
             - name: eslint
-              run: bun lint
+              run: bun -b lint
 
             - name: fix
               if: failure() && github.event_name == 'pull_request'
               run: |
                   git fetch origin ${{ github.event.pull_request.head.ref }} --depth=1
                   git switch ${{ github.event.pull_request.head.ref }}
-                  bun lint --fix
+                  bun -b lint --fix
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
                   git commit --all -m "fix: auto-fix eslint errors"
