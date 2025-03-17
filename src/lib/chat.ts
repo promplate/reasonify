@@ -8,5 +8,5 @@ export default async function* (options: ChatCompletionCreateParams) {
     console.error(await res.text());
     throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
   }
-  yield * responseToAsyncIterator(res);
+  yield* responseToAsyncIterator(res);
 }

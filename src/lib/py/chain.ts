@@ -16,7 +16,7 @@ export class AgentWrapper {
     this.#proxy = agent;
   }
 
-  async * astream(context: { query: string }): AsyncGenerator<Context> {
+  async* astream(context: { query: string }): AsyncGenerator<Context> {
     const py = await getPy();
     for await (const ctx of this.#proxy.astream(py.toPy(context), generate)) {
       yield toJs(ctx);
