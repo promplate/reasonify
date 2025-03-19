@@ -8,8 +8,8 @@ import chat from "$lib/chat";
 
 const getEnsure = getGlobals<(prompt: string) => PyProxyTo<Message[]>>("parse_chat_markup", "from promplate import parse_chat_markup");
 
-export default async function *async(prompt: string, kwargs: PyProxyTo<Omit<ChatCompletionCreateParams, "messages" | "stream">>) {
+export default async function* async(prompt: string, kwargs: PyProxyTo<Omit<ChatCompletionCreateParams, "messages" | "stream">>) {
   const options = toJs(kwargs);
   const ensure = await getEnsure();
-  yield * chat({ ...options, messages: toJs(ensure(prompt)), stream: true });
+  yield* chat({ ...options, messages: toJs(ensure(prompt)), stream: true });
 }
