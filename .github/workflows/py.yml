@@ -9,8 +9,7 @@ jobs:
             - uses: astral-sh/setup-uv@v6
               with:
                   python-version: 3.13
-                  enable-cache: true
-                  cache-dependency-glob: pyproject.toml
+                  activate-environment: true
             - name: install
               run: uv export --no-hashes | uv pip install -r - basedpyright
 
@@ -35,7 +34,6 @@ jobs:
                   python-version: 3.13
             - name: build
               run: |
-                  pip install uv --disable-pip-version-check
                   uv build
 
             - uses: actions/upload-artifact@v4
