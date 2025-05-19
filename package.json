@@ -27,7 +27,7 @@
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-svelte": "^3.0.1",
     "openai": "^4.56.0",
-    "pyodide": "0.27.5",
+    "pyodide": "0.27.6",
     "rehype-stringify": "^10.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
