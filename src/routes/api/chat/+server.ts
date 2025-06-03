@@ -22,9 +22,8 @@ export const POST = (async ({ request }) => {
   const headers = { "content-type": data?.response_format?.type?.includes("json") ? "application/json" : "text/markdown; charset=utf-8" };
   try {
     if (stream) {
-      const { textStream: iterator } = await streamText({ ...data, ...apiParams, fetch });
-      // @ts-expect-error 'ReadableStream' only refers to a type, but is being used as a value here
-      return new Response(ReadableStream.from(iterator), { headers });
+      const { textStream } = await streamText({ ...data, ...apiParams, fetch });
+      return new Response(textStream.pipeThrough(new TextEncoderStream()), { headers });
     } else {
       const res = await generateText({ ...data, ...apiParams, fetch });
       return text(res.text ?? "", { headers });
