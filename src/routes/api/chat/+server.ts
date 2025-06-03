@@ -15,7 +15,7 @@ export const POST = (async ({ request }) => {
   const data = await request.json() as ChatCompletionCreateParams;
   data.model = "gpt-4o-mini";
   console.log(data);
-  const headers = { "content-type": data?.response_format?.type === "json_object" ? "application/json" : "text/markdown; charset=utf-8" };
+  const headers = { "content-type": data?.response_format?.type?.includes("json") ? "application/json" : "text/markdown; charset=utf-8" };
   try {
     if (data.stream) {
       const res = await openai.chat.completions.create(data);
