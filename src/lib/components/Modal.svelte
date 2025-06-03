@@ -3,7 +3,7 @@
 
   let display = show;
 
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   $: if (show) {
     display = true;
