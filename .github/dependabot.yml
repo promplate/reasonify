@@ -16,6 +16,9 @@ updates:
           shiki:
               patterns:
                   - "*shiki*"
+          xsai:
+              patterns:
+                  - "*xs*"
     - package-ecosystem: github-actions
       directory: /
       schedule:
