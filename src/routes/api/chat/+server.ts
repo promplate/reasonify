@@ -10,7 +10,7 @@ import { createFetch } from "xsfetch";
 
 const apiParams = {
   apiKey: env.OPENAI_API_KEY ?? "",
-  baseURL: env.OPENAI_BASE_URL,
+  baseURL: env.OPENAI_BASE_URL ?? "https://api.openai.com/v1",
 };
 
 const fetch = createFetch({ debug: true, retryDelay: 0 });
