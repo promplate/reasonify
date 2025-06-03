@@ -1,7 +1,5 @@
 import type { PyProxy } from "pyodide/ffi";
 
-import { isObj } from "openai/core.mjs";
-
 export interface PyProxyTo<T> extends PyProxy {
   toJs: (...args: Parameters<PyProxy["toJs"]>) => T;
 }
@@ -16,4 +14,8 @@ export function toJs<T>(proxy: PyProxyTo<T>) {
   }
 
   return proxy as T;
+}
+
+function isObj(obj: unknown): obj is Record<string, unknown> {
+  return obj != null && typeof obj === "object" && !Array.isArray(obj);
 }
