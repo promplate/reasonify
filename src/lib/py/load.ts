@@ -18,5 +18,4 @@ export const getPy = cacheSingleton(async () => {
   return pyodide;
 });
 
-// eslint-disable-next-line import/no-mutable-exports
 export let py: PyodideInterface;
