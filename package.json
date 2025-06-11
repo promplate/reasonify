@@ -37,7 +37,7 @@
     "shiki": "^3.0.0",
     "svelte": "^4.2.18",
     "svelte-check": "^4.0.9",
-    "svelte-sonner": "^0.3.27",
+    "svelte-sonner": "^1.0.5",
     "tslib": "^2.6.3",
     "typescript": "^5.5.4",
     "unified": "^11.0.5",
