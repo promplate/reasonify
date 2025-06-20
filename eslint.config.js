@@ -23,4 +23,9 @@ export default antfu({
     "no-console": "warn",
     "yaml/indent": ["error", 4, { indicatorValueIndent: 2 }],
   },
+  overrides: {
+    svelte: {
+      "import/no-mutable-exports": "off",
+    },
+  },
 });
