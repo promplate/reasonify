@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { BundledLanguage, BundledTheme } from "shiki";
 
+  import { cached } from "$lib/utils/cache";
   import { getSingletonHighlighter } from "shiki";
 
   export let lang: BundledLanguage | "ansi" | "text";
@@ -8,7 +9,7 @@
   export let theme: BundledTheme = "vesper";
 
   async function highlight(source: string) {
-    const highlighter = await getSingletonHighlighter({ langs: [lang], themes: [theme] });
+    const highlighter = await cached(lang + theme)(() => getSingletonHighlighter({ langs: [lang], themes: [theme] }))();
 
     return highlighter.codeToHtml(source, { lang, theme });
   }

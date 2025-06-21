@@ -13,7 +13,7 @@ dependencies = [
   "promplate-recipes>=0.2.2.1,<0.2.4.0",
   "pyyaml~=6.0.1",
   "html-text~=0.6.2",
-  "html2text2~=1.0.0",
+  "html2text2~=1.0",
   "isomorphic-fetch~=0.0.0.0.dev2",
 ]
 
@@ -36,7 +36,7 @@ dev = [
   "micropip~=0.8.0",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
-  "pyodide-py==0.27.3",
+  "pyodide-py==0.27.7",
 ]
 
 [tool.pdm.scripts]
