@@ -2,7 +2,7 @@ import type { ChatOptions } from "@xsai/shared-chat";
 
 import { responseToAsyncIterator } from "./utils/iter";
 
-export default async function* (options: Omit<ChatOptions, "baseURL">) {
+export default async function* (options: Omit<ChatOptions, "baseURL"> & { stream: boolean }) {
   const res = await fetch("/api/chat", { method: "POST", body: JSON.stringify(options), headers: { "content-type": "application/json" } });
   if (res.status !== 200) {
     console.error(await res.text());

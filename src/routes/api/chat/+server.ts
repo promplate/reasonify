@@ -16,7 +16,7 @@ const apiParams = {
 const fetch = createFetch({ debug: true, retryDelay: 0 });
 
 export const POST = (async ({ request }) => {
-  const { stream, ...data } = await request.json() as ChatOptions & { response_format?: { type: string } };
+  const { stream, ...data } = await request.json() as ChatOptions & { stream: boolean; response_format?: { type: string } };
   data.model = "gpt-4o-mini";
   console.log(data);
   const headers = { "content-type": data?.response_format?.type?.includes("json") ? "application/json" : "text/markdown; charset=utf-8" };
