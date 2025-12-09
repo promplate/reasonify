@@ -20,9 +20,9 @@
     "@sveltejs/adapter-auto": "^6.0.0",
     "@sveltejs/kit": "^2.5.24",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
-    "@unocss/eslint-config": "~66.4.2",
-    "@unocss/extractor-svelte": "~66.4.2",
-    "@unocss/reset": "~66.4.2",
+    "@unocss/eslint-config": "~66.5.10",
+    "@unocss/extractor-svelte": "~66.5.10",
+    "@unocss/reset": "~66.5.10",
     "@xsai/generate-text": "^0.2.2",
     "@xsai/stream-text": "^0.2.2",
     "eslint": "^9.9.0",
@@ -41,7 +41,7 @@
     "tslib": "^2.6.3",
     "typescript": "^5.5.4",
     "unified": "^11.0.5",
-    "unocss": "~66.4.2",
+    "unocss": "~66.5.10",
     "vite": "^5.4.2",
     "xsfetch": "^0.2.2"
   }
