@@ -33,7 +33,7 @@ dev = [
   "isort>=6.0",
   "ruff>=0.9",
   "watchfiles>=1.0",
-  "micropip~=0.8.0",
+  "micropip>=0.8,<0.10",
   "webtypy~=0.1.7",
   "python-slugify~=8.0.4",
   "pyodide-py==0.27.7",
