@@ -1,10 +1,11 @@
+from collections.abc import Callable
 from contextlib import redirect_stderr, redirect_stdout
 from functools import cache
 from io import StringIO
 from itertools import count
 from json import loads
 from traceback import format_exception, format_exception_only, walk_tb
-from typing import Callable, TypedDict
+from typing import TypedDict
 
 from promplate import Context
 
