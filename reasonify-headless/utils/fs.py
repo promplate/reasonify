@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Awaitable, Callable
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING
 
 from js import FileSystemDirectoryHandle
 
@@ -16,4 +17,4 @@ else:
 
     NativeFS = object
 
-__all__ = ["mount", "unmount", "NativeFS"]
+__all__ = ["NativeFS", "mount", "unmount"]
