@@ -13,7 +13,7 @@ def input(prompt=""):
         if res := window.prompt(prompt):
             return res
 
-        raise IOError("User cancelled the input (refused to input anything)")
+        raise OSError("User cancelled the input (refused to input anything)")
 
     from builtins import input
 
