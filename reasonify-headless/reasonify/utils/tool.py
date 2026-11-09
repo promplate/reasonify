@@ -1,6 +1,6 @@
 from asyncio import iscoroutinefunction
+from collections.abc import Callable
 from inspect import Signature, isasyncgenfunction
-from typing import Callable
 
 from promplate_recipes.functional.component import SimpleComponent
 
