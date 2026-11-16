@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from inspect import signature
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from .context import Context
 
